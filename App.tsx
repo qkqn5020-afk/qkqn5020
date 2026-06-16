@@ -1,0 +1,752 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { 
+  ChevronDown, 
+  Play, 
+  ChevronLeft, 
+  ChevronRight, 
+  MapPin,
+  Menu,
+  Smartphone,
+  Users,
+  Trophy,
+  Activity,
+  Zap,
+  Target,
+  BarChart2,
+  CheckCircle2,
+  Wallet,
+  Clock,
+  Settings,
+  Plus,
+  Minus,
+  Check,
+  ShieldCheck,
+  Award,
+  Cpu,
+  X
+} from 'lucide-react';
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer, 
+  Cell,
+  LabelList
+} from 'recharts';
+import { STEPS, FAQ_LIST } from './constants';
+import TechnologyPage from './TechnologyPage';
+
+const PREVIEW_IMAGES = [
+  { src: "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/2.png", alt: "공간 미리보기 2" },
+  { src: "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/5.png", alt: "공간 미리보기 5" },
+  { src: "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/6.png", alt: "공간 미리보기 6" },
+  { src: "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/7.png", alt: "공간 미리보기 7" },
+];
+
+const PATENT_IMAGES = [
+  "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%ED%8A%B9%ED%97%881.png",
+  "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%ED%8A%B9%ED%97%882.png",
+  "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%ED%8A%B9%ED%97%883.png",
+  "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%ED%8A%B9%ED%97%884.png",
+  "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%ED%8A%B9%ED%97%885.png",
+  "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%ED%8A%B9%ED%97%886.png",
+  "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%ED%8A%B9%ED%97%887.png",
+  "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%ED%8A%B9%ED%97%888.png"
+];
+
+const App: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState<'Home' | 'Technology'>('Home');
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [scrollY, setScrollY] = useState(0);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    region: '',
+    phone: '',
+    details: ''
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitMessage(null);
+
+    if (!formData.name.trim()) {
+      setSubmitMessage({ type: 'error', text: '성함을 입력해 주세요.' });
+      return;
+    }
+    if (!formData.region.trim()) {
+      setSubmitMessage({ type: 'error', text: '희망 지역을 입력해 주세요.' });
+      return;
+    }
+    if (!formData.phone.trim()) {
+      setSubmitMessage({ type: 'error', text: '연락처를 입력해 주세요.' });
+      return;
+    }
+    if (!formData.details.trim()) {
+      setSubmitMessage({ type: 'error', text: '문의 내용을 입력해 주세요.' });
+      return;
+    }
+
+    setSubmitting(true);
+    
+    // Process form submission client-side as requested without dynamic SMTP backend services
+    setTimeout(() => {
+      setSubmitMessage({ 
+        type: 'success', 
+        text: '상담 신청이 접수되었습니다. 담당자가 확인 후 연락드리겠습니다.' 
+      });
+      setFormData({ name: '', region: '', phone: '', details: '' });
+      setSubmitting(false);
+    }, 800);
+  };
+
+  useEffect(() => {
+    if (currentPage !== 'Home') return;
+
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: "0px 0px -50px 0px"
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal-text, .patent-grid-item').forEach(el => observer.observe(el));
+    
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [currentPage]);
+
+  const handlePlayVideo = () => {
+    if (videoRef.current) {
+      videoRef.current.play();
+      setIsVideoPlaying(true);
+    }
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % PREVIEW_IMAGES.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + PREVIEW_IMAGES.length) % PREVIEW_IMAGES.length);
+  };
+
+  const goToTech = () => {
+    setCurrentPage('Technology');
+    window.scrollTo(0, 0);
+  };
+
+  const goToHome = () => {
+    setCurrentPage('Home');
+    window.scrollTo(0, 0);
+  };
+
+  const toggleFaq = (index: number) => {
+    setOpenFaqIndex(openFaqIndex === index ? null : index);
+  };
+
+  if (currentPage === 'Technology') {
+    return <TechnologyPage onBack={goToHome} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* SECTION 01: GNB */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+          <div 
+            className="flex items-center cursor-pointer group"
+            onClick={goToHome}
+          >
+            <img 
+              src="https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%EB%B0%B0%EB%84%88%20%EC%95%84%EC%9D%B4%EC%BD%984.png" 
+              alt="BECA24 로고" 
+              className="h-10 md:h-12 w-auto object-contain transition-transform group-hover:scale-105"
+            />
+          </div>
+
+          <div className="flex items-center gap-4">
+            <button className="bg-primary text-white px-6 py-2 rounded-full font-bold text-sm shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all">
+              1:1 창업 상담
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* SECTION 02: HERO */}
+      <section className="relative h-screen overflow-hidden bg-black">
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline 
+          className="absolute top-0 left-0 w-full h-full object-cover opacity-70"
+          style={{ transform: `scale(${1 + scrollY * 0.0003}) translate3d(0, ${scrollY * 0.1}px, 0)` }}
+        >
+          <source 
+            src="https://github.com/qkqn5020-afk/qkqn5020/raw/main/%EC%96%B4%EB%91%90%EC%9A%B4%EB%B2%84%EC%A0%84%20(1).mp4" 
+            type="video/mp4" 
+          />
+        </video>
+
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-10 px-4">
+          <div className="animate-fade-in-up">
+            <p className="text-xl md:text-3xl font-bold mb-6 tracking-tight drop-shadow-lg leading-relaxed">
+              국내유일 야구카페!<br />
+              치고! 던지고! 마시고! 즐기자!
+            </p>
+            <h2 className="text-6xl md:text-9xl font-black tracking-tighter drop-shadow-2xl">
+              베카24 & 홈런짱24
+            </h2>
+          </div>
+        </div>
+
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 text-white/50 animate-bounce">
+          <ChevronDown className="w-8 h-8" />
+        </div>
+      </section>
+
+      {/* SECTION 02.5: UNMANNED SOLUTION DETAIL */}
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <div className="reveal-text">
+            <h2 className="text-3xl md:text-5xl font-black text-[#111] leading-tight tracking-tight">
+              <span className="text-primary relative z-10">365일 24시간</span> 수익은 계속됩니다.
+            </h2>
+          </div>
+          <div className="reveal-text mt-3 mb-16 md:mb-20" style={{ transitionDelay: '0.2s' }}>
+            <h3 className="text-xl md:text-2xl font-light text-gray-400 tracking-tight">
+              하루 30분 관리, 인건비 No, 고정비 부담 최소화
+            </h3>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 justify-center">
+            {[
+              "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%EB%B0%B0%EB%84%881.png",
+              "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%EB%B0%B0%EB%84%882.png",
+              "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%EB%B0%B0%EB%84%883.png"
+            ].map((url, index) => (
+              <div key={index} className="reveal-text aspect-[4/3] overflow-hidden rounded-[40px] shadow-2xl shadow-slate-200 border border-slate-50" style={{ transitionDelay: `${index * 0.1}s` }}>
+                <img 
+                  src={url} 
+                  alt={`베카24 배너 ${index + 1}`} 
+                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ENHANCED SECTION: TECHNOLOGY - ARM PITCHING MACHINE */}
+      <section className="py-24 bg-white text-black overflow-hidden relative">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center gap-16">
+          <div className="flex-1 reveal-text">
+            <span className="text-black font-bold tracking-widest uppercase mb-4 block">WORLD-CLASS HARDWARE</span>
+            <h3 className="text-4xl md:text-5xl font-black mb-8 leading-tight text-black">
+              실제 투수의 궤적을 재현하는<br />
+              <span className="text-primary">ARM형 피칭머신</span>
+            </h3>
+            <p className="text-gray-500 text-lg leading-relaxed mb-8">
+              일반적인 휠 방식이 아닌, 실제 투수가 공을 던지는 메커니즘을 가진 암(Arm)형 머신을 채택했습니다. 
+              구질의 안정성과 타격 시의 리듬감을 극대화하여 무인 운영 환경에서도 프로급 연습 환경을 제공합니다.
+            </p>
+          </div>
+          <div className="flex-1 relative">
+            <div 
+              className="relative z-10 transition-transform duration-500 ease-out flex justify-center items-center"
+              style={{ transform: `translate3d(0, ${(scrollY - 1500) * -0.05}px, 0)` }}
+            >
+              <video 
+                autoPlay 
+                muted 
+                loop 
+                playsInline 
+                className="w-full max-w-lg h-auto arm-cutout-shadow object-contain"
+              >
+                <source src="https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%ED%94%BC%EC%B9%AD%EB%A8%B8%EC%8B%A0%20%EC%98%81%EC%83%81.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ENHANCED SECTION: LED MOTION SCREEN */}
+      <section className="py-32 bg-black overflow-hidden relative">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row-reverse items-center gap-20">
+          <div className="flex-1 reveal-text">
+            <span className="text-blue-400 font-bold tracking-widest uppercase mb-4 block">Visual Immersion</span>
+            <h3 className="text-4xl md:text-5xl font-black mb-8 leading-tight text-white">
+              타격과 동시에 펼쳐지는<br />
+              <span className="text-blue-400">LED 모션 그래픽</span>
+            </h3>
+            <p className="text-white text-lg font-light leading-relaxed mb-8">
+              머신에서 투구된 공이 센서를 통과하는 순간, 대형 LED 스크린은 그 궤적을 실제 구장과 동일하게 시뮬레이션합니다. 
+              단순한 연습을 넘어 마치 경기장에 서 있는 듯한 현장감을 선사합니다.
+            </p>
+            <div className="flex items-center gap-4 text-blue-400 font-bold text-xl">
+              <Zap className="w-8 h-8 text-accent" /> 0.01초 실시간 연동 시스템
+            </div>
+          </div>
+          <div className="flex-1 reveal-text flex justify-center items-center">
+            <video 
+              autoPlay 
+              muted 
+              loop 
+              playsInline 
+              className="w-full max-w-2xl h-auto arm-cutout-shadow object-contain"
+            >
+              <source src="https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%EB%8D%98%EC%A7%80%EB%8A%94%20%EB%AA%A8%EC%85%98%20%ED%8E%B8%EC%A7%91.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION: INDOOR INTERIOR ENHANCED */}
+      <section className="py-24 bg-gray-50 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16 reveal-text">
+            <h3 className="text-4xl font-black mb-6">프리미엄 인테리어 & 공간 미학</h3>
+            <p className="text-gray-500 text-lg">단순한 연습장을 넘어 고객이 머물고 싶은 하이엔드 공간을 제안.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+            <div className="reveal-text relative overflow-hidden rounded-[60px] aspect-square md:aspect-[3/2] shadow-2xl">
+              <img src="https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%EC%8B%A4%EB%82%B41.png" alt="실내 인테리어 1" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div className="absolute bottom-12 left-12 text-white">
+                <p className="font-bold text-3xl mb-2 drop-shadow-lg uppercase">PLAY & DESIGN ZONE</p>
+                <p className="text-base opacity-80 font-light">감각적인 스포츠 플레이 존</p>
+              </div>
+            </div>
+            <div className="reveal-text relative overflow-hidden rounded-[60px] aspect-square md:aspect-[3/2] shadow-2xl">
+              <img src="https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%EC%8B%A4%EB%82%B42.png" alt="실내 인테리어 2" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div className="absolute bottom-12 left-12 text-white">
+                <p className="font-bold text-3xl mb-2 drop-shadow-lg">LOUNGE AREA</p>
+                <p className="text-base opacity-80 font-light">무인 스마트 키오스크 & 커뮤니티 공간</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION: SPACE & CONTENT PREVIEW CAROUSEL */}
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex justify-between items-end mb-12 reveal-text">
+            <div>
+              <h3 className="text-4xl font-black mb-4 text-slate-900">BECA24 공간 & 콘텐츠 미리보기</h3>
+              <p className="text-gray-400 text-lg">압도적인 브랜드 비주얼과 세련된 매장 인테리어로 완성된 프리미엄 무인 야구 문화 공간</p>
+            </div>
+            <div className="flex flex-col items-center gap-3">
+              <span className="text-lg font-bold text-slate-400">
+                <span className="text-primary">{currentSlide + 1}</span> / {PREVIEW_IMAGES.length}
+              </span>
+              <div className="flex gap-2">
+                <button onClick={prevSlide} className="w-14 h-14 rounded-full border border-gray-100 flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm">
+                  <ChevronLeft className="w-6 h-6 text-slate-600" />
+                </button>
+                <button onClick={nextSlide} className="w-14 h-14 rounded-full border border-gray-100 flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm">
+                  <ChevronRight className="w-6 h-6 text-slate-600" />
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div className="relative group reveal-text">
+            <div className="aspect-[21/9] md:aspect-[21/10] overflow-hidden rounded-[40px] shadow-2xl shadow-slate-200">
+              <div className="flex transition-transform duration-700 ease-out h-full" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+                {PREVIEW_IMAGES.map((img, i) => (
+                  <div key={i} className="min-w-full h-full">
+                    <img src={img.src} alt={img.alt} className="w-full h-full object-cover" />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-center gap-3 mt-10">
+              {PREVIEW_IMAGES.map((_, i) => (
+                <button key={i} onClick={() => setCurrentSlide(i)} className={`h-1.5 rounded-full transition-all duration-300 ${currentSlide === i ? 'w-10 bg-primary' : 'w-2 bg-gray-200'}`} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* REVENUE CASES */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-end mb-12 reveal-text">
+            <h3 className="text-2xl md:text-3xl font-black text-slate-900">매장 규모에 따른 운영 시뮬레이션</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+            {[
+              { title: '35평형', rev: '(3레인 기준)', img: 'https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/35%ED%8F%89.png' },
+              { title: '45평형', rev: '(4레인 기준)', img: "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/45%ED%8F%89%ED%98%95.png" },
+              { title: '60평형', rev: '(5레인 기준)', img: 'https://github.com/qkqn5020-afk/qkqn5020/raw/main/60%ED%8F%89.png' },
+            ].map((item, i) => (
+              <div key={i} className="reveal-text bg-white rounded-[40px] overflow-hidden shadow-sm group hover:shadow-xl transition-all border border-gray-100" style={{ transitionDelay: `${i * 0.1}s` }}>
+                <div className="overflow-hidden h-56">
+                  <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                </div>
+                <div className="p-10 text-center">
+                  <div className="bg-blue-50 text-blue-600 font-bold text-sm inline-block px-4 py-1.5 rounded-full mb-6">{item.title}</div>
+                  <h4 className="text-3xl font-black text-primary">{item.rev}</h4>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SUCCESS STORY */}
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="reveal-text bg-blue-950 rounded-[40px] p-8 md:p-20 relative flex flex-col md:flex-row gap-12 items-center shadow-3xl">
+            <div className="flex-1 text-white z-10">
+              <h3 className="text-3xl font-black mb-10 text-orange-400">BECA24<br />Field Insight</h3>
+              <div className="bg-white/5 backdrop-blur-md p-10 rounded-3xl border border-white/10 mb-8">
+                <p className="text-lg leading-relaxed font-light text-gray-100">
+                  “베카24는 운동을 하러 오는 공간이면서, 쉬고 즐기러 오는 공간이기도 합니다. 야구를 치다가 로봇탁구를 하고, 잠시 카페에서 쉬었다가 다른 스포츠 콘텐츠를 즐기며 무인 운영 환경에서도 매장은 늘 활기 있게 유지됩니다.”
+                </p>
+              </div>
+            </div>
+            <div className="flex-1 w-full text-center">
+              <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl group border-4 border-white/10 bg-black cursor-pointer" onClick={!isVideoPlaying ? handlePlayVideo : undefined} style={{ backgroundImage: !isVideoPlaying ? "url('https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/hero-background.jpg')" : 'none', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                <video ref={videoRef} src="https://github.com/qkqn5020-afk/qkqn5020/raw/main/251120_%EB%B2%A0%EC%B9%B4%ED%99%8D%EB%B3%B4%EC%98%81%EC%83%81%20%EC%B5%9C%EC%A2%85.mp4" className={`w-full h-full object-cover ${isVideoPlaying ? 'opacity-100' : 'opacity-0'}`} playsInline controls={isVideoPlaying} />
+                {!isVideoPlaying && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20 transition-all">
+                    <button className="w-24 h-24 bg-orange-500 rounded-full flex items-center justify-center shadow-2xl transform transition-transform">
+                      <Play className="text-white fill-white ml-1 w-10 h-10" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SMART ANALYTICS */}
+      <section className="py-32 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12 lg:gap-32">
+          <div className="flex-1 md:max-w-[55%] reveal-text text-left">
+            <span className="text-primary font-bold text-sm tracking-widest uppercase mb-6 block">SMART ANALYTICS</span>
+            <h3 className="text-3xl md:text-4xl font-black mb-10 leading-[1.3] text-slate-900 tracking-tight">상상만 하던<br /><span className="text-orange-500">데이터 야구</span>가 실제 운영이 됩니다</h3>
+            <div className="text-gray-500 text-lg leading-relaxed mb-12 space-y-6">
+              <p>베카24는 단순히 공을 치는 공간이 아닙니다. 타구 속도, 회전수, 비거리와 같은 데이터를 실시간으로 기록하고 시각화해 이용자가 자신의 변화를 직접 확인할 수 있도록 합니다.</p>
+              <p>이렇게 축적된 데이터는 자연스럽게 재도전과 재방문으로 이어지고, 무인 운영 환경에서도 안정적인 이용 흐름을 만들어내며, 재방문율을 획기적으로 높이는 원동력이 됩니다.</p>
+              <p className="font-bold text-slate-700">데이터는 곧, 운영의 안정성입니다.</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {['#실시간데이터', '#재방문구조', '#무인운영시스템'].map((tag, idx) => (
+                <span key={idx} className="bg-blue-50 text-primary px-5 py-2.5 rounded-full text-sm font-bold">{tag}</span>
+              ))}
+            </div>
+          </div>
+          <div className="flex-1 md:flex-[1.1] reveal-text flex justify-center items-center w-full">
+            <div className="p-2 md:p-3 bg-white rounded-[60px] shadow-[0_35px_70px_-15px_rgba(0,0,0,0.12)] border border-slate-50 w-full">
+              <img src="https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/beca24%20loading.png" alt="데이터 야구" className="w-full h-[380px] md:h-[450px] rounded-[52px] object-cover" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* UNMANNED AUTOMATION */}
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row-reverse items-center gap-12 lg:gap-24">
+          <div className="flex-1 reveal-text text-left">
+            <span className="text-primary font-bold text-sm tracking-widest uppercase mb-6 block">24/7 FULL AUTOMATION</span>
+            <h3 className="text-3xl md:text-4xl font-black mb-10 leading-[1.3] text-slate-900 tracking-tight">인건비 0원의 기적<br /><span className="text-primary">완전 무인 자동화 시스템</span></h3>
+            <div className="text-gray-500 text-lg leading-relaxed mb-10 space-y-6">
+              <p>베카24 & 홈런짱24는 사람이 상주하지 않아도 매장이 스스로 운영되도록 설계된 공간입니다.</p>
+              <p>결제, 이용, 종료까지 모든 과정이 자동으로 연결되며, 매장은 24시간 끊김 없이 운영됩니다.</p>
+              <p>운영자는 현장에 없어도 모바일 또는 관리자 시스템을 통해 매장 상태와 이용 흐름을 간편하게 확인할 수 있습니다.</p>
+              <p className="font-bold text-slate-800">인건비 부담 없이, 운영은 단순하게. 수익 구조는 안정적으로 유지됩니다.</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <span className="bg-primary text-white px-5 py-2.5 rounded-full text-sm font-bold">#무인자동화</span>
+              <span className="bg-blue-50 text-primary px-5 py-2.5 rounded-full text-sm font-bold">#인건비절감</span>
+              <span className="bg-blue-50 text-primary px-5 py-2.5 rounded-full text-sm font-bold">#24시간운영</span>
+            </div>
+          </div>
+          <div className="flex-1 reveal-text flex justify-center items-center w-full">
+            <div className="p-2 md:p-3 bg-white rounded-[60px] shadow-[0_35px_70px_-15px_rgba(0,0,0,0.12)] border border-slate-50 w-full overflow-hidden">
+              <img src="https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%ED%99%88%EB%9F%B0%EC%A7%B124.jpg" alt="무인 자동화 시스템" className="w-full h-[380px] md:h-[450px] rounded-[52px] object-cover" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* VARIOUS ENTERTAINMENT */}
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12 lg:gap-24">
+          <div className="flex-1 reveal-text text-left">
+            <span className="text-orange-500 font-bold text-sm tracking-widest uppercase mb-6 block">MAXIMIZE REVENUE</span>
+            <h3 className="text-3xl md:text-4xl font-black mb-10 leading-[1.3] text-slate-900 tracking-tight">다양한 오락기계 제공<br /><span className="text-primary">지루할 틈 없는 복합 스포츠 공간</span></h3>
+            <div className="text-gray-500 text-lg leading-relaxed mb-10 space-y-6">
+              <p>베카24는 메인 콘텐츠인 야구 외에도 축구, 농구, 탁구, 사격 등 누구나 즐길 수 있는 다양한 스포츠 오락 기계를 함께 제공합니다.</p>
+              <p>짧은 플레이 타임과 높은 접근성으로 대기 시간까지 매출로 연결하며, 고객이 매장에 더 오래 머물 수 있는 환경을 조성합니다.</p>
+              <p>이러한 콘텐츠 다양성은 무인 운영 환경에서도 꾸준한 이용 흐름을 만들어내며, 재방문율을 획기적으로 높이는 원동력이 됩니다.</p>
+              <p className="font-bold text-slate-800">콘텐츠의 확장이 곧 매장 경쟁력이자 수익의 극대화입니다.</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <span className="bg-blue-50 text-primary px-5 py-2.5 rounded-full text-sm font-bold">#스포츠오락</span>
+              <span className="bg-blue-50 text-primary px-5 py-2.5 rounded-full text-sm font-bold">#체류시간증대</span>
+              <span className="bg-blue-50 text-primary px-5 py-2.5 rounded-full text-sm font-bold">#추가수익창출</span>
+            </div>
+          </div>
+          <div className="flex-1 reveal-text flex justify-center items-center w-full">
+            <div className="p-2 md:p-3 bg-white rounded-[60px] shadow-[0_35px_70px_-15px_rgba(0,0,0,0.12)] border border-slate-50 w-full overflow-hidden">
+              <img src="https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%EC%98%A4%EB%9D%BD%EA%B8%B0%EA%B3%84.png" alt="다양한 오락시설" className="w-full h-auto rounded-[52px] object-cover" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TRUST & PATENT GALLERY */}
+      <section className="py-32 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col-reverse md:flex-row items-center gap-12 lg:gap-24">
+            <div className="flex-1 md:flex-[1.5] w-full overflow-hidden">
+              <div className="animate-slow-marquee flex gap-10 py-6">
+                {[...PATENT_IMAGES, ...PATENT_IMAGES].map((url, i) => (
+                  <div key={i} className="flex-shrink-0 bg-white p-5 rounded-xl shadow-lg border border-slate-50 h-72 md:h-96 w-auto flex items-center justify-center">
+                    <img src={url} alt={`특허증 ${i + 1}`} className="h-full w-auto object-contain" />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex-1 reveal-text text-left">
+              <span className="text-primary font-bold tracking-widest uppercase block mb-4">Official Verification</span>
+              <h3 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 leading-tight">검증된 독보적 기술력</h3>
+              <p className="text-gray-500 text-lg leading-relaxed">베카24의 모든 시스템은 지식재산권으로 보호받는 본사 고유의 기술입니다.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* MARQUEE */}
+      <div className="bg-blue-800 py-8 overflow-hidden whitespace-nowrap relative z-10 shadow-2xl">
+        <div className="animate-marquee inline-flex text-white font-black text-2xl uppercase tracking-widest gap-20">
+          {Array(10).fill(0).map((_, i) => (
+            <span key={i} className="flex items-center gap-6">BECA24 BASEBALL CAFE 24 <Zap className="text-orange-400 w-8 h-8" /> DATA-DRIVEN TRAINING <Zap className="text-orange-400 w-8 h-8" /> UNMANNED ACADEMY</span>
+          ))}
+        </div>
+      </div>
+
+      {/* CORE TECHNOLOGY */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-16 reveal-text">
+            <h3 className="text-4xl font-black mb-6 text-slate-900">베카24 무인 운영의 핵심 기술</h3>
+            <p className="text-gray-500 text-lg">사람 없이도 매장이 안정적으로 운영되는 비결입니다.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { label: '3-Wheel 머신', desc: '안정적인 구질로 밤납없이 돌아가는 매장의 핵심 장비입니다.', icon: <Activity className="w-12 h-12 mb-6 text-primary" /> },
+              { label: '비전 센서', desc: '타구 결과를 자동 인식하여 관리 부담을 획기적으로 낮춥니다.', icon: <Target className="w-12 h-12 mb-6 text-primary" /> },
+              { label: 'AI 아카데미', desc: '혼자서도 실력이 느는 비대면 트레이닝 시스템입니다.', icon: <Smartphone className="w-12 h-12 mb-6 text-primary" /> },
+              { label: '스마트 라운지', desc: '야구, 로봇탁구, 카페 등 추가 수익 창출의 근간이 됩니다.', icon: <Users className="w-12 h-12 mb-6 text-primary" /> }
+            ].map((item, i) => (
+              <div key={i} className="reveal-text bg-white p-10 rounded-[40px] border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all group" style={{ transitionDelay: `${i * 0.1}s` }}>
+                <div className="bg-blue-50 w-20 h-20 rounded-3xl flex items-center justify-center mb-8 group-hover:bg-primary transition-colors">
+                  {React.cloneElement(item.icon as React.ReactElement<any>, { className: 'w-10 h-10 text-primary group-hover:text-white transition-colors' })}
+                </div>
+                <h4 className="font-black mb-4 text-xl text-slate-900">{item.label}</h4>
+                <p className="text-sm text-gray-500 leading-relaxed font-light">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PRICING & PACKAGE SECTION */}
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-16 reveal-text">
+            <h3 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight tracking-tight mb-4">합리적인 비용으로<br /><span className="text-primary">무인 스포츠 창업</span>을 시작하세요</h3>
+            <p className="text-gray-400 text-lg md:text-xl font-light">초기 부담은 낮추고, 운영 안정성과 확장성은 높인 BECA24 표준 창업 모델</p>
+          </div>
+
+          <div className="reveal-text bg-white rounded-[60px] overflow-hidden shadow-2xl border border-slate-100 mb-16">
+            <div className="bg-primary py-12 px-6 text-center text-white">
+              <p className="text-lg font-bold opacity-80 mb-4">BECA24 표준 창업 패키지 (추천)</p>
+              <h4 className="text-3xl md:text-5xl font-black mb-4">창업비용은 1:1 문의</h4>
+              <p className="text-sm opacity-60">※ 매장 규모 및 구성에 따라 상이 / 부가세 별도</p>
+            </div>
+            <div className="p-12 md:p-20 grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+              {[
+                { title: '무인 운영 시스템', desc: '출입, 결제, 원격 관리 통합 무인 시스템' },
+                { title: '피칭머신 & 분석 시스템', desc: 'ARM형 피칭머신, LED 모션 스크린' },
+                { title: '실내·외 시설 공사', desc: '방음, 네트, 바닥, 안전 시설' },
+                { title: '인테리어 시공', desc: '기본 인테리어, 조명, 사인물' },
+                { title: '콘텐츠 설비', desc: '야구, 로봇탁구 등 복합 스포츠 콘텐츠' },
+                { title: '초도 비품', desc: '공, 배트, 보호 장비' },
+                { title: '교육 및 오픈 지원', desc: '설치, 교육, 초기 운영 지원 포함' },
+                { title: '브랜드 사용', desc: 'BECA24 브랜드 및 시스템 사용 포함' }
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-4">
+                  <div className="w-7 h-7 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0 mt-1"><CheckCircle2 className="w-5 h-5 text-primary" /></div>
+                  <div>
+                    <p className="text-xl font-black text-slate-900 mb-2">{item.title}</p>
+                    <p className="text-slate-500 font-light">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW FAQ SECTION (Image 2) */}
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-16 reveal-text">
+            <h3 className="text-4xl font-black text-slate-900 mb-4">자주 묻는 질문</h3>
+            <div className="w-16 h-1.5 bg-blue-600 mx-auto rounded-full"></div>
+          </div>
+          
+          <div className="divide-y divide-gray-100 reveal-text">
+            {FAQ_LIST.map((faq, index) => (
+              <div key={index} className="group">
+                <button 
+                  onClick={() => toggleFaq(index)}
+                  className="w-full py-8 flex items-center justify-between text-left group-hover:text-primary transition-colors"
+                >
+                  <span className="text-lg md:text-xl font-bold tracking-tight pr-8">{faq.question}</span>
+                  <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${openFaqIndex === index ? 'rotate-45 text-primary bg-blue-50' : 'text-gray-300'}`}>
+                    <Plus className="w-6 h-6" />
+                  </div>
+                </button>
+                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${openFaqIndex === index ? 'max-h-96 pb-12' : 'max-h-0'}`}>
+                  <p className="text-gray-500 text-lg leading-relaxed font-light pl-4 border-l-2 border-primary/20">
+                    {faq.answer}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ & CONTACT */}
+      <section id="contact" className="py-24 bg-white relative">
+        <div className="max-w-4xl mx-auto px-4 relative reveal-text">
+          <div className="bg-blue-50/50 rounded-[60px] p-12 md:p-20 shadow-inner overflow-hidden border border-blue-100">
+            <h3 className="text-4xl font-black mb-4 text-center">창업 상담 신청</h3>
+            <p className="text-gray-400 text-center mb-12">상권 분석 리포트를 무료로 제공해 드립니다.</p>
+            <form onSubmit={handleFormSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <input 
+                  type="text" 
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  disabled={submitting}
+                  placeholder="성함" 
+                  className="bg-white border border-gray-200 rounded-2xl px-6 py-4 outline-none transition-all shadow-sm focus:ring-2 focus:ring-primary/20 disabled:bg-gray-100 disabled:text-gray-400" 
+                />
+                <input 
+                  type="text" 
+                  name="region"
+                  value={formData.region}
+                  onChange={handleInputChange}
+                  disabled={submitting}
+                  placeholder="희망 지역" 
+                  className="bg-white border border-gray-200 rounded-2xl px-6 py-4 outline-none transition-all shadow-sm focus:ring-2 focus:ring-primary/20 disabled:bg-gray-100 disabled:text-gray-400" 
+                />
+              </div>
+              <input 
+                type="tel" 
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                disabled={submitting}
+                placeholder="연락처" 
+                className="w-full bg-white border border-gray-200 rounded-2xl px-6 py-4 outline-none transition-all shadow-sm focus:ring-2 focus:ring-primary/20 disabled:bg-gray-100 disabled:text-gray-400" 
+              />
+              <textarea 
+                name="details"
+                value={formData.details}
+                onChange={handleInputChange}
+                disabled={submitting}
+                placeholder="문의 내용" 
+                className="w-full bg-white border border-gray-200 rounded-2xl px-6 py-4 h-40 outline-none resize-none transition-all shadow-sm focus:ring-2 focus:ring-primary/20 disabled:bg-gray-100 disabled:text-gray-400"
+              ></textarea>
+              
+              {submitMessage && (
+                <div className={`p-4 rounded-xl text-center font-bold text-sm leading-relaxed ${
+                  submitMessage.type === 'success' 
+                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
+                    : 'bg-rose-50 text-rose-800 border border-rose-200'
+                }`}>
+                  {submitMessage.text}
+                </div>
+              )}
+
+              <button 
+                type="submit"
+                disabled={submitting}
+                className="w-full bg-primary text-white font-black py-6 rounded-2xl text-xl hover:bg-blue-700 shadow-2xl shadow-blue-200 transition-all active:scale-[0.98] disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {submitting ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>신청 접수 중...</span>
+                  </>
+                ) : '무료 창업 상담 예약하기'}
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <footer className="bg-slate-900 text-white pt-24 pb-12 relative z-20">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-12">
+          <div className="text-center md:text-left">
+            <img src="https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%EB%B0%B0%EB%84%88%20%EC%95%84%EC%9D%B4%EC%BD%984.png" alt="로고" className="h-12 mb-6 mx-auto md:mx-0" />
+            <p className="text-gray-400 text-sm font-light">대한민국 No.1 무인 야구 배팅 센터 브랜드 BECA24</p>
+          </div>
+          <div className="text-center md:text-right">
+            <h4 className="text-4xl md:text-5xl font-black text-blue-400 mb-2 tracking-tighter">1544-4788</h4>
+            <p className="text-gray-500 text-sm font-light">jlsports777@naver.com</p>
+            <p className="text-gray-600 text-[10px] mt-6">© 2024 BECA24 Baseball Technology. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default App;

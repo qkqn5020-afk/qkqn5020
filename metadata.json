@@ -1,0 +1,10 @@
+{
+  "name": "13시작",
+  "description": "국내 No.1 무인 야구 배팅 센터 & 아카데미 베카24 창업 상세페이지입니다.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
