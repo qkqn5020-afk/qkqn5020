@@ -121,16 +121,50 @@ const App: React.FC = () => {
     }
 
     setSubmitting(true);
-    
-    // Process form submission client-side as requested without dynamic SMTP backend services
-    setTimeout(() => {
-      setSubmitMessage({ 
-        type: 'success', 
-        text: '상담 신청이 접수되었습니다. 담당자가 확인 후 연락드리겠습니다.' 
+
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/jlsports777@naver.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          _subject: "[창업 상담 신청] 새로운 상담 신청",
+          _captcha: "false",
+          "성함": formData.name,
+          "희망 지역": formData.region,
+          "연락처": formData.phone,
+          "문의 내용": formData.details,
+          "Name": formData.name,
+          "Preferred Region": formData.region,
+          "Contact Number": formData.phone,
+          "Inquiry Details": formData.details
+        })
       });
-      setFormData({ name: '', region: '', phone: '', details: '' });
+
+      if (response.ok) {
+        setSubmitMessage({ 
+          type: 'success', 
+          text: '상담 신청이 접수되었습니다. 담당자가 확인 후 연락드리겠습니다.' 
+        });
+        setFormData({ name: '', region: '', phone: '', details: '' });
+      } else {
+        const errData = await response.json().catch(() => ({}));
+        setSubmitMessage({ 
+          type: 'error', 
+          text: errData.message || '상담 신청 접수 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.' 
+        });
+      }
+    } catch (err: any) {
+      console.error('FormSubmit sending error:', err);
+      setSubmitMessage({ 
+        type: 'error', 
+        text: '상담 신청 중 오류가 발생했습니다. 다시 시도해 주세요.' 
+      });
+    } finally {
       setSubmitting(false);
-    }, 800);
+    }
   };
 
   useEffect(() => {
@@ -703,7 +737,9 @@ const App: React.FC = () => {
           }`}>
             <h3 className="text-4xl font-black mb-4 text-center">창업 상담 신청</h3>
             <p className="text-gray-400 text-center mb-12">상권 분석 리포트를 무료로 제공해 드립니다.</p>
-            <form onSubmit={handleFormSubmit} className="space-y-6">
+            <form action="https://formsubmit.co/jlsports777@naver.com" method="POST" onSubmit={handleFormSubmit} className="space-y-6">
+              <input type="hidden" name="_subject" value="[창업 상담 신청] 새로운 상담 신청" />
+              <input type="hidden" name="_captcha" value="false" />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <input 
                   ref={nameInputRef}
