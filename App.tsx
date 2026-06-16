@@ -23,7 +23,8 @@ import {
   ShieldCheck,
   Award,
   Cpu,
-  X
+  X,
+  Phone
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -36,7 +37,7 @@ import {
   Cell,
   LabelList
 } from 'recharts';
-import { STEPS, FAQ_LIST } from './constants';
+import { STEPS, FAQ_LIST, PRICING_LIST } from './constants';
 import TechnologyPage from './TechnologyPage';
 
 const PREVIEW_IMAGES = [
@@ -56,6 +57,59 @@ const PATENT_IMAGES = [
   "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%ED%8A%B9%ED%97%887.png",
   "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/%ED%8A%B9%ED%97%888.png"
 ];
+
+// Interactive high-performance animated counter utilizing requestAnimationFrame for 60fps pacing
+const AnimatedCounter: React.FC<{ end: number; suffix?: string; duration?: number; decimals?: number }> = ({ end, suffix = '', duration = 1200, decimals = 0 }) => {
+  const [count, setCount] = useState(0);
+  const elementRef = useRef<HTMLSpanElement>(null);
+  const [hasStarted, setHasStarted] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setHasStarted(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!hasStarted) return;
+    let startTime: number | null = null;
+    let animationFrameId: number;
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = timestamp - startTime;
+      const percentage = Math.min(progress / duration, 1);
+      
+      const currentVal = percentage * end;
+      setCount(currentVal);
+
+      if (percentage < 1) {
+        animationFrameId = requestAnimationFrame(animate);
+      } else {
+        setCount(end);
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [hasStarted, end, duration]);
+
+  return (
+    <span ref={elementRef} className="tabular-nums">
+      {count.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+      {suffix}
+    </span>
+  );
+};
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<'Home' | 'Technology'>('Home');
@@ -285,13 +339,13 @@ const App: React.FC = () => {
           />
         </video>
 
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-10 px-4">
+        <div className="absolute inset-0 flex flex-col items-center justify-end pb-24 md:justify-center md:pb-0 text-center text-white z-10 px-4">
           <div className="animate-fade-in-up">
-            <p className="text-xl md:text-3xl font-bold mb-6 tracking-tight drop-shadow-lg leading-relaxed">
+            <p className="text-xl md:text-3xl font-bold mb-10 md:mb-6 tracking-tight drop-shadow-lg leading-relaxed">
               국내유일 야구카페!<br />
               치고! 던지고! 마시고! 즐기자!
             </p>
-            <h2 className="text-6xl md:text-9xl font-black tracking-tighter drop-shadow-2xl">
+            <h2 className="text-3xl sm:text-4xl md:text-9xl font-black tracking-tighter drop-shadow-2xl whitespace-nowrap">
               베카24 & 홈런짱24
             </h2>
           </div>
@@ -669,61 +723,507 @@ const App: React.FC = () => {
           <div className="reveal-text bg-white rounded-[60px] overflow-hidden shadow-2xl border border-slate-100 mb-16">
             <div className="bg-primary py-12 px-6 text-center text-white">
               <p className="text-lg font-bold opacity-80 mb-4">BECA24 표준 창업 패키지 (추천)</p>
-              <h4 className="text-3xl md:text-5xl font-black mb-4">창업비용은 1:1 문의</h4>
-              <p className="text-sm opacity-60">※ 매장 규모 및 구성에 따라 상이 / 부가세 별도</p>
+              <h4 className="text-3xl md:text-5xl font-black mb-2">창업비용은 1:1 문의</h4>
+              <p className="text-white/75 text-sm md:text-base font-light">※ 매장 규모 및 구성에 따라 상이 / 부가세 별도</p>
             </div>
-            <div className="p-12 md:p-20 grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
-              {[
-                { title: '무인 운영 시스템', desc: '출입, 결제, 원격 관리 통합 무인 시스템' },
-                { title: '피칭머신 & 분석 시스템', desc: 'ARM형 피칭머신, LED 모션 스크린' },
-                { title: '실내·외 시설 공사', desc: '방음, 네트, 바닥, 안전 시설' },
-                { title: '인테리어 시공', desc: '기본 인테리어, 조명, 사인물' },
-                { title: '콘텐츠 설비', desc: '야구, 로봇탁구 등 복합 스포츠 콘텐츠' },
-                { title: '초도 비품', desc: '공, 배트, 보호 장비' },
-                { title: '교육 및 오픈 지원', desc: '설치, 교육, 초기 운영 지원 포함' },
-                { title: '브랜드 사용', desc: 'BECA24 브랜드 및 시스템 사용 포함' }
-              ].map((item, i) => (
-                <div key={i} className="flex items-start gap-4">
-                  <div className="w-7 h-7 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0 mt-1"><CheckCircle2 className="w-5 h-5 text-primary" /></div>
+            
+            {/* Original 2-column checklist layout */}
+            <div className="p-8 md:p-16">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10 max-w-4xl mx-auto">
+                {/* Item 1 */}
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 mt-1">
+                    <div className="w-6 h-6 rounded-full border border-blue-500 flex items-center justify-center text-blue-600 bg-blue-50/50">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    </div>
+                  </div>
                   <div>
-                    <p className="text-xl font-black text-slate-900 mb-2">{item.title}</p>
-                    <p className="text-slate-500 font-light">{item.desc}</p>
+                    <h5 className="font-extrabold text-slate-900 text-lg sm:text-xl leading-none mb-2">무인 운영 시스템</h5>
+                    <p className="text-slate-400 text-sm sm:text-base">출입, 결제, 원격 관리 통합 무인 시스템</p>
                   </div>
                 </div>
-              ))}
+
+                {/* Item 2 */}
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 mt-1">
+                    <div className="w-6 h-6 rounded-full border border-blue-500 flex items-center justify-center text-blue-600 bg-blue-50/50">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    </div>
+                  </div>
+                  <div>
+                    <h5 className="font-extrabold text-slate-900 text-lg sm:text-xl leading-none mb-2">피칭머신 & 분석 시스템</h5>
+                    <p className="text-slate-400 text-sm sm:text-base">ARM형 피칭머신, LED 모션 스크린</p>
+                  </div>
+                </div>
+
+                {/* Item 3 */}
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 mt-1">
+                    <div className="w-6 h-6 rounded-full border border-blue-500 flex items-center justify-center text-blue-600 bg-blue-50/50">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    </div>
+                  </div>
+                  <div>
+                    <h5 className="font-extrabold text-slate-900 text-lg sm:text-xl leading-none mb-2">실내 · 외 시설 공사</h5>
+                    <p className="text-slate-400 text-sm sm:text-base">방음, 네트, 바닥, 안전 시설</p>
+                  </div>
+                </div>
+
+                {/* Item 4 */}
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 mt-1">
+                    <div className="w-6 h-6 rounded-full border border-blue-500 flex items-center justify-center text-blue-600 bg-blue-50/50">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    </div>
+                  </div>
+                  <div>
+                    <h5 className="font-extrabold text-slate-900 text-lg sm:text-xl leading-none mb-2">인테리어 시공</h5>
+                    <p className="text-slate-400 text-sm sm:text-base">기본 인테리어, 조명, 사인물</p>
+                  </div>
+                </div>
+
+                {/* Item 5 */}
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 mt-1">
+                    <div className="w-6 h-6 rounded-full border border-blue-500 flex items-center justify-center text-blue-600 bg-blue-50/50">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    </div>
+                  </div>
+                  <div>
+                    <h5 className="font-extrabold text-slate-900 text-lg sm:text-xl leading-none mb-2">콘텐츠 설비</h5>
+                    <p className="text-slate-400 text-sm sm:text-base">야구, 로봇탁구 등 복합 스포츠 콘텐츠</p>
+                  </div>
+                </div>
+
+                {/* Item 6 */}
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 mt-1">
+                    <div className="w-6 h-6 rounded-full border border-blue-500 flex items-center justify-center text-blue-600 bg-blue-50/50">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    </div>
+                  </div>
+                  <div>
+                    <h5 className="font-extrabold text-slate-900 text-lg sm:text-xl leading-none mb-2">초도 비품</h5>
+                    <p className="text-slate-400 text-sm sm:text-base">공, 배트, 보호 장비</p>
+                  </div>
+                </div>
+
+                {/* Item 7 */}
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 mt-1">
+                    <div className="w-6 h-6 rounded-full border border-blue-500 flex items-center justify-center text-blue-600 bg-blue-50/50">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    </div>
+                  </div>
+                  <div>
+                    <h5 className="font-extrabold text-slate-900 text-lg sm:text-xl leading-none mb-2">교육 및 오픈 지원</h5>
+                    <p className="text-slate-400 text-sm sm:text-base">설치, 교육, 초기 운영 지원 포함</p>
+                  </div>
+                </div>
+
+                {/* Item 8 */}
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 mt-1">
+                    <div className="w-6 h-6 rounded-full border border-blue-500 flex items-center justify-center text-blue-600 bg-blue-50/50">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    </div>
+                  </div>
+                  <div>
+                    <h5 className="font-extrabold text-slate-900 text-lg sm:text-xl leading-none mb-2">브랜드 사용</h5>
+                    <p className="text-slate-400 text-sm sm:text-base">BECA24 브랜드 및 시스템 사용 포함</p>
+                  </div>
+                </div>
+
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* NEW FAQ SECTION (Image 2) */}
-      <section className="py-24 bg-white overflow-hidden">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="text-center mb-16 reveal-text">
-            <h3 className="text-4xl font-black text-slate-900 mb-4">자주 묻는 질문</h3>
-            <div className="w-16 h-1.5 bg-blue-600 mx-auto rounded-full"></div>
-          </div>
+      {/* SECTION: PREMIUM FRANCHISE OPPORTUNITY */}
+      <section className="py-28 bg-[#ffffff] border-t border-gray-100 overflow-hidden relative">
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
           
-          <div className="divide-y divide-gray-100 reveal-text">
-            {FAQ_LIST.map((faq, index) => (
-              <div key={index} className="group">
-                <button 
-                  onClick={() => toggleFaq(index)}
-                  className="w-full py-8 flex items-center justify-between text-left group-hover:text-primary transition-colors"
-                >
-                  <span className="text-lg md:text-xl font-bold tracking-tight pr-8">{faq.question}</span>
-                  <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${openFaqIndex === index ? 'rotate-45 text-primary bg-blue-50' : 'text-gray-300'}`}>
-                    <Plus className="w-6 h-6" />
+          {/* 1. Success Store Showcase */}
+          <div className="text-center mb-16 reveal-text">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-primary text-sm font-bold tracking-wide uppercase mb-4">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+              </span>
+              SUCCESS STORY
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight">
+              전국을 사로잡은 <span className="text-primary">실제 매장 성공 신화</span>
+            </h2>
+            <p className="text-lg md:text-xl text-slate-500 font-medium tracking-tight mt-4 max-w-3xl mx-auto">
+              가상의 그래픽이나 무작위 배치가 아닌, 실제 성황리에 활발히 가동 중인 자랑스러운 전국 브랜드 가맹 스페이스입니다. 믿을 수 있는 점주님들의 현명한 지점별 경영 전경을 확인하세요.
+            </p>
+          </div>
+
+          {/* Grid Layout: Desktop 2x2, Mobile Single Column */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 mb-28">
+            
+            {/* Card 1: 홈런짱24 양산점 */}
+            <div className="reveal-text group relative bg-slate-50 rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.06)] hover:shadow-[0_30px_70px_rgba(249,115,22,0.15)] border border-slate-100 transition-all duration-500 transform hover:-translate-y-3">
+              {/* Image Frame */}
+              <div className="relative overflow-hidden aspect-[4/3] md:aspect-[16/10] w-full bg-slate-900">
+                <img 
+                  src="https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/yangsan.jpg" 
+                  alt="홈런짱24 양산점 전경"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:brightness-110"
+                />
+                {/* Decorative Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent"></div>
+                {/* Top Badge */}
+                <span className="absolute top-6 left-6 px-4 py-1.5 bg-orange-500 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow-lg shadow-orange-500/20 tracking-wider">
+                  대형 복합 레저 매장
+                </span>
+              </div>
+              {/* Card Bottom Content */}
+              <div className="p-6 md:p-8 bg-white border-t border-slate-50 relative">
+                <div className="flex flex-wrap items-start justify-between gap-4 mb-3">
+                  <div>
+                    <span className="text-xs font-black text-orange-500 tracking-widest uppercase block mb-1">BASEBALL & PLAY STAGE</span>
+                    <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">홈런짱24 양산점</h3>
                   </div>
-                </button>
-                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${openFaqIndex === index ? 'max-h-96 pb-12' : 'max-h-0'}`}>
-                  <p className="text-gray-500 text-lg leading-relaxed font-light pl-4 border-l-2 border-primary/20">
-                    {faq.answer}
-                  </p>
+                  <div className="flex items-center gap-1.5 bg-orange-50 border border-orange-100 text-orange-600 px-3.5 py-1.5 rounded-full text-xs font-bold shadow-sm">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-orange-500"></span>
+                    </span>
+                    주말 하루 내방 500명 돌파
+                  </div>
+                </div>
+                <p className="text-slate-500 text-sm sm:text-base leading-relaxed tracking-tight">
+                  24시 무인 야구배팅과 레저 플레이 및 각종 인기 오락 가두 시설이 환상적으로 결합한 대형 복합 스포츠 전경입니다. 뛰어난 인테리어와 폭넓은 계층 집객으로 경남권 요충지 최고 랜드마크로 떠올랐습니다.
+                </p>
+                <div className="flex items-center gap-2 mt-5 pt-4 border-t border-slate-100 text-slate-400 text-xs font-semibold">
+                  <MapPin className="w-3.5 h-3.5 text-orange-500" />
+                  <span>경상남도 양산시 핵심 주거 및 상가 밀집 중심로</span>
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* Card 2: 베카24 서면점 */}
+            <div className="reveal-text group relative bg-slate-50 rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.06)] hover:shadow-[0_30px_70px_rgba(30,64,175,0.15)] border border-slate-100 transition-all duration-500 transform hover:-translate-y-3">
+              {/* Image Frame */}
+              <div className="relative overflow-hidden aspect-[4/3] md:aspect-[16/10] w-full bg-slate-900">
+                <img 
+                  src="https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/beca24.jpg" 
+                  alt="베카24 서면점 전경"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:brightness-110"
+                />
+                {/* Decorative Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent"></div>
+                {/* Top Badge */}
+                <span className="absolute top-6 left-6 px-4 py-1.5 bg-blue-600 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow-lg shadow-blue-600/20 tracking-wider">
+                  AI 스윙 프리미엄 지점
+                </span>
+              </div>
+              {/* Card Bottom Content */}
+              <div className="p-6 md:p-8 bg-white border-t border-slate-50 relative">
+                <div className="flex flex-wrap items-start justify-between gap-4 mb-3">
+                  <div>
+                    <span className="text-xs font-black text-blue-600 tracking-widest uppercase block mb-1">AI SWING ANALYSIS PORTAL</span>
+                    <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">베카24 서면점</h3>
+                  </div>
+                  <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-100 text-blue-600 px-3.5 py-1.5 rounded-full text-xs font-bold shadow-sm">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
+                    </span>
+                    완전 무인오토 정착형 모델
+                  </div>
+                </div>
+                <p className="text-slate-500 text-sm sm:text-base leading-relaxed tracking-tight">
+                  특허 획득 무인 플레이 배팅 센서와 자체 키오스크 모바일 연동을 통해 AI 아카데미 전문형으로 설계된 지점입니다. 트렌디한 네온 그래픽의 고급 공간 설계로 부산 메인 상권의 젊은 스포츠 팬층을 집결시키고 있습니다.
+                </p>
+                <div className="flex items-center gap-2 mt-5 pt-4 border-t border-slate-100 text-slate-400 text-xs font-semibold">
+                  <MapPin className="w-3.5 h-3.5 text-blue-600" />
+                  <span>부산시 서면 대적형 로데오메인 상가 랜드마크</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3: 짱탁구장 잠실새내점 */}
+            <div className="reveal-text group relative bg-slate-50 rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.06)] hover:shadow-[0_30px_70px_rgba(168,85,247,0.15)] border border-slate-100 transition-all duration-500 transform hover:-translate-y-3">
+              {/* Image Frame */}
+              <div className="relative overflow-hidden aspect-[4/3] md:aspect-[16/10] w-full bg-slate-900">
+                <img 
+                  src="https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/zamsil.jpg" 
+                  alt="짱탁구장 잠실새내점 전경"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:brightness-110"
+                />
+                {/* Decorative Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent"></div>
+                {/* Top Badge */}
+                <span className="absolute top-6 left-6 px-4 py-1.5 bg-purple-600 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow-lg shadow-purple-600/20 tracking-wider">
+                  2030 트렌디 스팟
+                </span>
+              </div>
+              {/* Card Bottom Content */}
+              <div className="p-6 md:p-8 bg-white border-t border-slate-50 relative">
+                <div className="flex flex-wrap items-start justify-between gap-4 mb-3">
+                  <div>
+                    <span className="text-xs font-black text-purple-600 tracking-widest uppercase block mb-1">HYPER SPEED PINGPONG ROOM</span>
+                    <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">짱탁구장 잠실새내점</h3>
+                  </div>
+                  <div className="flex items-center gap-1.5 bg-purple-50 border border-purple-100 text-purple-600 px-3.5 py-1.5 rounded-full text-xs font-bold shadow-sm">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-purple-500"></span>
+                    </span>
+                    매출액 1위 돌파 레전드 마일
+                  </div>
+                </div>
+                <p className="text-slate-500 text-sm sm:text-base leading-relaxed tracking-tight">
+                  오렌지와 퍼플의 유니크한 힙 인테리어와 로봇 탁구 시스템이 시너지를 내는 무인 핫플레이스입니다. 뛰어난 접근성은 물론 2차 캐주얼 모임, 직딩 데이트 등 심야 황금 상권을 연중무휴 24시간 가치로 누리고 있습니다.
+                </p>
+                <div className="flex items-center gap-2 mt-5 pt-4 border-t border-slate-100 text-slate-400 text-xs font-semibold">
+                  <MapPin className="w-3.5 h-3.5 text-purple-600" />
+                  <span>서울특별시 송파구 잠실새내역 맛집 및 도보 중앙 중심 동선</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 4: 짱탁구장 경남대점 */}
+            <div className="reveal-text group relative bg-slate-50 rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.06)] hover:shadow-[0_30px_70px_rgba(16,185,129,0.15)] border border-slate-100 transition-all duration-500 transform hover:-translate-y-3">
+              {/* Image Frame */}
+              <div className="relative overflow-hidden aspect-[4/3] md:aspect-[16/10] w-full bg-slate-900">
+                <img 
+                  src="https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/kynam.jpg" 
+                  alt="짱탁구장 경남대점 전경"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:brightness-110"
+                />
+                {/* Decorative Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent"></div>
+                {/* Top Badge */}
+                <span className="absolute top-6 left-6 px-4 py-1.5 bg-emerald-600 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-600/20 tracking-wider">
+                  안정적 학거리 최고매출
+                </span>
+              </div>
+              {/* Card Bottom Content */}
+              <div className="p-6 md:p-8 bg-white border-t border-slate-50 relative">
+                <div className="flex flex-wrap items-start justify-between gap-4 mb-3">
+                  <div>
+                    <span className="text-xs font-black text-emerald-600 tracking-widest uppercase block mb-1">ROBOTIC ACADEMY CELL</span>
+                    <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">짱탁구장 경남대점</h3>
+                  </div>
+                  <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-100 text-emerald-600 px-3.5 py-1.5 rounded-full text-xs font-bold shadow-sm">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                    </span>
+                    점주 상주 시간 0시간 연속 실천
+                  </div>
+                </div>
+                <p className="text-slate-500 text-sm sm:text-base leading-relaxed tracking-tight">
+                  로봇 연동형 개인 연습 존과 탁월한 그룹 경기가 자유롭게 행해지는 학원가 최고의 복합 스포츠룸입니다. 대학교, 중고등학교가 인접한 등하교 핵심 관문을 선점하며 연중 비성수기 없는 고른 경영 실적을 성취했습니다.
+                </p>
+                <div className="flex items-center gap-2 mt-5 pt-4 border-t border-slate-100 text-slate-400 text-xs font-semibold">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>경남 마산합포구 경남대학교 대학가 중심 통행 스트리트</span>
+                </div>
+              </div>
+            </div>
+
           </div>
+
+          {/* 2. Why This Business Works */}
+          <div className="my-36">
+            <div className="text-center mb-16 reveal-text">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 border border-orange-100 text-orange-600 text-sm font-bold tracking-wide uppercase mb-4">
+                STABLE FRANCHISE VALUE
+              </span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+                왜 <span className="text-orange-500">무인 가맹 비즈니스</span> 여야만 할까요?
+              </h2>
+              <p className="text-lg md:text-xl text-slate-500 font-medium tracking-tight mt-4 max-w-3xl mx-auto">
+                가장 정밀하고 오류 없는 오토파일럿 무인 제어로 점주님께 완전한 경영 편리성과 안정된 최상위 수익을 안겨드립니다.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              
+              {/* Card 1 */}
+              <div className="reveal-text group bg-white p-8 rounded-[32px] border border-slate-100 shadow-[0_15px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_45px_rgba(30,64,175,0.08)] hover:border-blue-100 transition-all duration-400 flex flex-col justify-between items-start h-full">
+                <div>
+                  <div className="mb-8 p-4 rounded-2xl bg-blue-50 text-primary w-fit group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-md">
+                    <Smartphone className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3 tracking-tight group-hover:text-primary transition-colors">오토 파일럿 원격 제어</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed tracking-tight">
+                    스마트폰 원격 전원 통제, 기기 리셋, 매장 내 냉난방기 조절 및 24시간 안심 CCTV 솔루션을 탑재하여 현장 근무 상주가 불필요합니다.
+                  </p>
+                </div>
+                <div className="mt-6 flex items-center gap-1.5 text-xs font-semibold text-primary/70">
+                  <span>원격 시스템 100% 모바일 연동</span>
+                </div>
+              </div>
+
+              {/* Card 2 */}
+              <div className="reveal-text group bg-white p-8 rounded-[32px] border border-slate-100 shadow-[0_15px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_45px_rgba(249,115,22,0.08)] hover:border-orange-100 transition-all duration-400 flex flex-col justify-between items-start h-full">
+                <div>
+                  <div className="mb-8 p-4 rounded-2xl bg-orange-50 text-orange-500 w-fit group-hover:bg-orange-500 group-hover:text-white transition-all duration-300 shadow-md">
+                    <Zap className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3 tracking-tight group-hover:text-orange-500 transition-colors">24시간 정지 없는 수입</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed tracking-tight">
+                    직장에 근무하고 계실 적, 한가로운 여가를 즐기실 적, 편히 수면을 취하는 깊은 밤에도 매장은 알아서 결제되고 끊임없이 돌아갑니다.
+                  </p>
+                </div>
+                <div className="mt-6 flex items-center gap-1.5 text-xs font-semibold text-orange-600/70">
+                  <span>공백 시간이 전혀 없는 연속 매출</span>
+                </div>
+              </div>
+
+              {/* Card 3 */}
+              <div className="reveal-text group bg-white p-8 rounded-[32px] border border-slate-100 shadow-[0_15px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_45px_rgba(168,85,247,0.08)] hover:border-purple-100 transition-all duration-400 flex flex-col justify-between items-start h-full">
+                <div>
+                  <div className="mb-8 p-4 rounded-2xl bg-purple-50 text-purple-600 w-fit group-hover:bg-purple-600 group-hover:text-white transition-all duration-300 shadow-md">
+                    <ShieldCheck className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3 tracking-tight group-hover:text-purple-600 transition-colors">가장 두려운 인건비 제로</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed tracking-tight">
+                    알바생 고용 갈등, 지속적인 실망, 최저임금 급상승 리스크로부터 100% 해방되어 순이익 마진율을 파격적인 비율로 높였습니다.
+                  </p>
+                </div>
+                <div className="mt-6 flex items-center gap-1.5 text-xs font-semibold text-purple-600/70">
+                  <span>고정 고정비 최적화 실현</span>
+                </div>
+              </div>
+
+              {/* Card 4 */}
+              <div className="reveal-text group bg-white p-8 rounded-[32px] border border-slate-100 shadow-[0_15px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_45px_rgba(16,185,129,0.08)] hover:border-emerald-100 transition-all duration-400 flex flex-col justify-between items-start h-full">
+                <div>
+                  <div className="mb-8 p-4 rounded-2xl bg-emerald-50 text-teal-600 w-fit group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-md">
+                    <Award className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3 tracking-tight group-hover:text-emerald-600 transition-colors">본사 안심 올케어 지원</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed tracking-tight">
+                    프랜차이즈 상권 정밀분석부터 공학적 스포츠 시공, 고밀도 사양 기기 설치, 홍보 기획 마케팅까지 모든 노하우를 다이렉트로 인계합니다.
+                  </p>
+                </div>
+                <div className="mt-6 flex items-center gap-1.5 text-xs font-semibold text-emerald-600/70">
+                  <span>책임 공정 및 원스톱 오픈 보장</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* 3. Trust & Proven Operation (Statistics) */}
+          <div className="my-36 bg-slate-900 rounded-[48px] p-8 sm:p-12 md:p-16 relative overflow-hidden shadow-2xl">
+            {/* Visual Lights */}
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-orange-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+            
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              <div className="lg:col-span-5 reveal-text">
+                <span className="text-orange-500 font-extrabold text-sm sm:text-base tracking-wider uppercase block mb-3">TRUST & PROVEN FACTS</span>
+                <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
+                  숫자로 공인받는 <br/>
+                  <span className="text-blue-400">베카24의 검증된 가치</span>
+                </h3>
+                <p className="text-slate-400 font-medium text-base sm:text-lg tracking-tight mt-6 leading-relaxed">
+                  본사의 탄탄한 경영 실적과 전국적인 기기 공용률 데이터를 있는 그대로 자부합니다. 수많은 실 오너 분들의 연중무휴 매출 데이터가 당사의 견고한 비즈니스 뼈대를 입증합니다.
+                </p>
+              </div>
+              
+              <div className="lg:col-span-7 grid grid-cols-2 gap-6 md:gap-8 reveal-text">
+                
+                {/* Stat block 1 */}
+                <div id="trust-card-1" className="bg-white/5 border border-white/10 p-6 sm:p-8 rounded-[32px] backdrop-blur-md hover:border-blue-500/30 hover:bg-white/10 transition-all duration-300">
+                  <span className="text-blue-400 text-xs sm:text-sm font-bold block mb-3">TRUST 01</span>
+                  <div className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-snug min-h-[3rem] sm:min-h-[4rem] flex items-center">
+                    전국 직영점 운영
+                  </div>
+                  <p className="text-slate-400 text-xs sm:text-sm font-semibold tracking-tight mt-4">
+                    실제 운영 매장을 기반으로 창업 상담 진행
+                  </p>
+                </div>
+
+                {/* Stat block 2 */}
+                <div id="trust-card-2" className="bg-white/5 border border-white/10 p-6 sm:p-8 rounded-[32px] backdrop-blur-md hover:border-orange-500/30 hover:bg-white/10 transition-all duration-300">
+                  <span className="text-orange-400 text-xs sm:text-sm font-bold block mb-3">TRUST 02</span>
+                  <div className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-snug min-h-[3rem] sm:min-h-[4rem] flex items-center">
+                    24시간 무인 운영
+                  </div>
+                  <p className="text-slate-400 text-xs sm:text-sm font-semibold tracking-tight mt-4">
+                    연중무휴 무인 시스템 운영 가능
+                  </p>
+                </div>
+
+                {/* Stat block 3 */}
+                <div id="trust-card-3" className="bg-white/5 border border-white/10 p-6 sm:p-8 rounded-[32px] backdrop-blur-md hover:border-purple-500/30 hover:bg-white/10 transition-all duration-300">
+                  <span className="text-purple-400 text-xs sm:text-sm font-bold block mb-3">TRUST 03</span>
+                  <div className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-snug min-h-[3rem] sm:min-h-[4rem] flex items-center">
+                    본사 직접 시공
+                  </div>
+                  <p className="text-slate-400 text-xs sm:text-sm font-semibold tracking-tight mt-4">
+                    상담부터 설치·시공까지 본사에서 직접 진행
+                  </p>
+                </div>
+
+                {/* Stat block 4 */}
+                <div id="trust-card-4" className="bg-white/5 border border-white/10 p-6 sm:p-8 rounded-[32px] backdrop-blur-md hover:border-emerald-500/30 hover:bg-white/10 transition-all duration-300">
+                  <span className="text-emerald-400 text-xs sm:text-sm font-bold block mb-3">TRUST 04</span>
+                  <div className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-snug min-h-[3rem] sm:min-h-[4rem] flex items-center">
+                    검증된 창업 모델
+                  </div>
+                  <p className="text-slate-400 text-xs sm:text-sm font-semibold tracking-tight mt-4">
+                    실제 매장 운영 경험을 바탕으로 구성된 시스템
+                  </p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          {/* 4. Powerful CTA Section */}
+          <div className="reveal-text max-w-5xl mx-auto mt-28">
+            <div className="relative rounded-[40px] overflow-hidden bg-[#0a1224] p-10 sm:p-14 border border-blue-900/40 shadow-[0_30px_70px_rgba(0,0,0,0.35)] text-center">
+              {/* Radial gradient background lights */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-blue-950/60 via-transparent to-orange-950/20 pointer-events-none"></div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[500px] h-[350px] bg-gradient-to-r from-blue-600/15 to-orange-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+              
+              <div className="relative z-10 flex flex-col items-center">
+                {/* Pulsing high contrast badge */}
+                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-extrabold text-sm sm:text-base px-6 py-2.5 rounded-2xl shadow-lg shadow-orange-500/20 tracking-wider mb-6">
+                  <Phone className="w-4 h-4 fill-white animate-pulse" />
+                  창업 문의 환영
+                </div>
+                
+                <h3 className="text-2xl sm:text-3xl md:text-5xl font-black text-white tracking-tight leading-snug mb-4">
+                  성공적인 무인 오토 창업 파트너, <br/>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-orange-400">베카24와 부담 없이 시작하세요!</span>
+                </h3>
+                <p className="text-slate-400 font-medium text-sm sm:text-base md:text-lg tracking-tight mb-10 max-w-2xl">
+                  아래 간단한 문의를 접수해 주시면 원하는 희망 지역권의 상권 보고서와 초기 설계 수익 추정 시뮬레이션을 전액 무상 지원합니다.
+                </p>
+                
+                {/* Call & CTA Buttons Container */}
+                <div className="flex flex-col sm:flex-row items-center gap-6 justify-center w-full">
+                  <div className="bg-white/5 border border-white/10 rounded-[24px] px-8 py-4 flex flex-col items-center sm:items-start group transition-all duration-300 hover:border-blue-500/55 w-full sm:w-auto">
+                    <span className="text-slate-400 text-xs font-bold block tracking-wider uppercase mb-1">본사 다이렉트 긴급 개설 라인</span>
+                    <a href="tel:1544-4788" className="text-3xl sm:text-4xl font-black text-blue-400 tracking-tighter hover:text-blue-300 transition-colors">
+                      1544-4788
+                    </a>
+                  </div>
+                  
+                  <button 
+                    onClick={handleScrollToForm}
+                    className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-black px-12 py-5 sm:py-6 rounded-[24px] text-lg sm:text-xl shadow-xl shadow-blue-900/30 transition-all duration-300 hover:shadow-blue-500/20 active:scale-[0.98] flex items-center justify-center gap-3 group"
+                  >
+                    <span>무료 창업 상담 신청</span>
+                    <ChevronRight className="w-6 h-6 group-hover:translate-x-1.5 transition-transform" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
