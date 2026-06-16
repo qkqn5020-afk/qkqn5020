@@ -65,6 +65,26 @@ const App: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
+  const [isHighlighted, setIsHighlighted] = useState(false);
+  const [pendingScrollAndFocus, setPendingScrollAndFocus] = useState(false);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  const handleScrollToForm = () => {
+    setIsHighlighted(true);
+    const targetElement = document.getElementById('contact');
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    setTimeout(() => {
+      if (nameInputRef.current) {
+        nameInputRef.current.focus({ preventScroll: true });
+      }
+    }, 850);
+    setTimeout(() => {
+      setIsHighlighted(false);
+    }, 2500);
+  };
+
   const [formData, setFormData] = useState({
     name: '',
     region: '',
@@ -142,6 +162,15 @@ const App: React.FC = () => {
     };
   }, [currentPage]);
 
+  useEffect(() => {
+    if (currentPage === 'Home' && pendingScrollAndFocus) {
+      setPendingScrollAndFocus(false);
+      setTimeout(() => {
+        handleScrollToForm();
+      }, 300);
+    }
+  }, [currentPage, pendingScrollAndFocus]);
+
   const handlePlayVideo = () => {
     if (videoRef.current) {
       videoRef.current.play();
@@ -162,9 +191,13 @@ const App: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
-  const goToHome = () => {
+  const goToHome = (scrollFocus?: boolean) => {
     setCurrentPage('Home');
-    window.scrollTo(0, 0);
+    if (scrollFocus === true) {
+      setPendingScrollAndFocus(true);
+    } else {
+      window.scrollTo(0, 0);
+    }
   };
 
   const toggleFaq = (index: number) => {
@@ -192,7 +225,10 @@ const App: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="bg-primary text-white px-6 py-2 rounded-full font-bold text-sm shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all">
+            <button 
+              onClick={handleScrollToForm}
+              className="bg-primary text-white px-6 py-2 rounded-full font-bold text-sm shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all"
+            >
               1:1 창업 상담
             </button>
           </div>
@@ -660,12 +696,17 @@ const App: React.FC = () => {
       {/* FAQ & CONTACT */}
       <section id="contact" className="py-24 bg-white relative">
         <div className="max-w-4xl mx-auto px-4 relative reveal-text">
-          <div className="bg-blue-50/50 rounded-[60px] p-12 md:p-20 shadow-inner overflow-hidden border border-blue-100">
+          <div className={`rounded-[60px] p-12 md:p-20 shadow-inner overflow-hidden border transition-all duration-700 ease-out ${
+            isHighlighted 
+              ? 'bg-blue-50 border-primary scale-[1.02] ring-8 ring-primary/15 shadow-[0_30px_60px_-15px_rgba(30,64,175,0.2)]' 
+              : 'bg-blue-50/50 border-blue-100 scale-100 ring-0'
+          }`}>
             <h3 className="text-4xl font-black mb-4 text-center">창업 상담 신청</h3>
             <p className="text-gray-400 text-center mb-12">상권 분석 리포트를 무료로 제공해 드립니다.</p>
             <form onSubmit={handleFormSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <input 
+                  ref={nameInputRef}
                   type="text" 
                   name="name"
                   value={formData.name}

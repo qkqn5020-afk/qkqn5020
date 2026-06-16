@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 interface TechnologyPageProps {
-  onBack: () => void;
+  onBack: (scrollFocus?: boolean) => void;
 }
 
 const TechnologyPage: React.FC<TechnologyPageProps> = ({ onBack }) => {
@@ -235,11 +235,7 @@ const TechnologyPage: React.FC<TechnologyPageProps> = ({ onBack }) => {
             </button>
             <button 
               onClick={() => {
-                onBack();
-                setTimeout(() => {
-                  const el = document.getElementById('contact');
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }, 100);
+                onBack(true);
               }}
               className="px-10 py-6 bg-white/5 border border-white/10 text-white font-black rounded-full text-lg hover:bg-white/10 transition-all flex items-center justify-center gap-3"
             >
