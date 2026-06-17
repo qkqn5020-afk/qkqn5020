@@ -1317,6 +1317,9 @@ const App: React.FC = () => {
           </div>
           <div className="text-center md:text-right">
             <h4 className="text-4xl md:text-5xl font-black text-blue-400 mb-2 tracking-tighter">1544-4788</h4>
+            <p className="text-gray-500 text-sm font-light">주식회사 제이엘에스 151-86-02163</p>
+            <p className="text-gray-500 text-sm font-light">대표: 조가비, 조현은</p>
+            <p className="text-gray-500 text-sm font-light">경상남도 김해시 대동면 산단중앙로 190-31</p>
             <p className="text-gray-500 text-sm font-light">jlsports777@naver.com</p>
             <p className="text-gray-600 text-[10px] mt-6">© 2024 BECA24 Baseball Technology. All rights reserved.</p>
           </div>
