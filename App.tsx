@@ -112,6 +112,18 @@ const AnimatedCounter: React.FC<{ end: number; suffix?: string; duration?: numbe
 };
 
 const App: React.FC = () => {
+  const [showTerms, setShowTerms] = useState(false);
+const [showPrivacy, setShowPrivacy] = useState(false);
+  <p className="text-gray-500 text-sm font-light">jlsports777@naver.com</p>
+  <div className="mt-4 flex justify-center md:justify-end gap-3 text-sm">
+  <button onClick={() => setShowTerms(true)} className="text-gray-400 hover:text-white">
+    이용약관
+  </button>
+  <span className="text-gray-600">|</span>
+  <button onClick={() => setShowPrivacy(true)} className="text-gray-400 hover:text-white">
+    개인정보처리방침
+  </button>
+</div>
   const [currentPage, setCurrentPage] = useState<'Home' | 'Technology'>('Home');
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -1324,6 +1336,40 @@ const App: React.FC = () => {
             <p className="text-gray-600 text-[10px] mt-6">© 2024 BECA24 Baseball Technology. All rights reserved.</p>
           </div>
         </div>
+        {showTerms && (
+  <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+    <div className="bg-white text-black rounded-xl p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">이용약관</h2>
+        <button onClick={() => setShowTerms(false)} className="font-bold">✕</button>
+      </div>
+      <div className="space-y-4 text-sm leading-7">
+        <p>본 사이트는 주식회사 제이엘에스가 운영하는 베카24, 홈런짱24 브랜드 정보를 제공하기 위한 공식 홈페이지입니다.</p>
+        <p>이용자는 본 사이트를 이용함에 있어 관련 법령과 본 약관을 준수하여야 합니다.</p>
+        <p>사이트 내 모든 이미지, 로고, 문서, 콘텐츠의 저작권은 주식회사 제이엘에스에 있습니다.</p>
+        <p>회사는 서비스 개선을 위하여 내용을 변경할 수 있으며 변경 시 홈페이지를 통해 공지합니다.</p>
+      </div>
+    </div>
+  </div>
+)}
+
+{showPrivacy && (
+  <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+    <div className="bg-white text-black rounded-xl p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">개인정보처리방침</h2>
+        <button onClick={() => setShowPrivacy(false)} className="font-bold">✕</button>
+      </div>
+      <div className="space-y-4 text-sm leading-7">
+        <p>주식회사 제이엘에스는 이용자의 개인정보를 중요하게 생각하며 개인정보보호법을 준수합니다.</p>
+        <p>수집되는 개인정보는 상담 문의 접수, 고객 응대 및 서비스 안내를 위해서만 사용됩니다.</p>
+        <p>수집 항목: 이름, 연락처, 이메일, 희망 지역, 문의 내용</p>
+        <p>보유 기간: 상담 완료 후 관련 법령에 따라 보관 후 파기합니다.</p>
+        <p>개인정보 관련 문의: jlsports777@naver.com</p>
+      </div>
+    </div>
+  </div>
+)}
       </footer>
     </div>
   );
