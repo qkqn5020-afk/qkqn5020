@@ -1342,12 +1342,22 @@ const [showPrivacy, setShowPrivacy] = useState(false);
         <h2 className="text-2xl font-bold">이용약관</h2>
         <button onClick={() => setShowTerms(false)} className="font-bold">✕</button>
       </div>
-      <div className="space-y-4 text-sm leading-7">
-        <p>본 사이트는 주식회사 제이엘에스가 운영하는 베카24, 홈런짱24 브랜드 정보를 제공하기 위한 공식 홈페이지입니다.</p>
-        <p>이용자는 본 사이트를 이용함에 있어 관련 법령과 본 약관을 준수하여야 합니다.</p>
-        <p>사이트 내 모든 이미지, 로고, 문서, 콘텐츠의 저작권은 주식회사 제이엘에스에 있습니다.</p>
-        <p>회사는 서비스 개선을 위하여 내용을 변경할 수 있으며 변경 시 홈페이지를 통해 공지합니다.</p>
-      </div>
+<div className="space-y-4 text-sm leading-7">
+  <p><strong>제1조 (목적)</strong></p>
+  <p>본 약관은 주식회사 제이엘에스가 운영하는 베카24 홈페이지의 이용과 관련하여 회사와 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.</p>
+
+  <p><strong>제2조 (서비스 이용)</strong></p>
+  <p>이용자는 관련 법령 및 본 약관을 준수하여야 하며 회사의 정상적인 운영을 방해하는 행위를 하여서는 안 됩니다.</p>
+
+  <p><strong>제3조 (지적재산권)</strong></p>
+  <p>홈페이지에 게시된 모든 콘텐츠(텍스트, 이미지, 로고, 디자인 등)의 저작권은 회사에 있으며 무단 복제, 배포 및 상업적 이용을 금합니다.</p>
+
+  <p><strong>제4조 (면책조항)</strong></p>
+  <p>회사는 천재지변, 시스템 장애 등 불가항력적인 사유로 발생한 손해에 대하여 책임을 지지 않습니다.</p>
+
+  <p><strong>제5조 (약관 변경)</strong></p>
+  <p>회사는 필요한 경우 약관을 변경할 수 있으며 변경사항은 홈페이지를 통해 공지합니다.</p>
+</div>
     </div>
   </div>
 )}
@@ -1359,13 +1369,27 @@ const [showPrivacy, setShowPrivacy] = useState(false);
         <h2 className="text-2xl font-bold">개인정보처리방침</h2>
         <button onClick={() => setShowPrivacy(false)} className="font-bold">✕</button>
       </div>
-      <div className="space-y-4 text-sm leading-7">
-        <p>주식회사 제이엘에스는 이용자의 개인정보를 중요하게 생각하며 개인정보보호법을 준수합니다.</p>
-        <p>수집되는 개인정보는 상담 문의 접수, 고객 응대 및 서비스 안내를 위해서만 사용됩니다.</p>
-        <p>수집 항목: 이름, 연락처, 이메일, 희망 지역, 문의 내용</p>
-        <p>보유 기간: 상담 완료 후 관련 법령에 따라 보관 후 파기합니다.</p>
-        <p>개인정보 관련 문의: jlsports777@naver.com</p>
-      </div>
+<div className="space-y-4 text-sm leading-7">
+  <p>주식회사 제이엘에스는 개인정보보호법 등 관련 법령을 준수하며 이용자의 개인정보를 안전하게 보호합니다.</p>
+
+  <p><strong>1. 수집하는 개인정보 항목</strong></p>
+  <p>이름, 연락처, 이메일, 희망 지역, 문의 내용</p>
+
+  <p><strong>2. 개인정보 수집 및 이용 목적</strong></p>
+  <p>창업 문의 상담, 고객 문의 응대, 서비스 관련 안내</p>
+
+  <p><strong>3. 개인정보 보유 및 이용기간</strong></p>
+  <p>수집된 개인정보는 상담 목적 달성 후 지체 없이 파기하며 관련 법령에 따라 보관이 필요한 경우 해당 기간 동안 보관합니다.</p>
+
+  <p><strong>4. 개인정보 제3자 제공</strong></p>
+  <p>회사는 이용자의 동의 없이 개인정보를 외부에 제공하지 않습니다.</p>
+
+  <p><strong>5. 개인정보 보호책임자</strong></p>
+  <p>회사명 : 주식회사 제이엘에스</p>
+  <p>문의 : jlsports777@naver.com</p>
+  <p>대표번호 : 1544-4788</p>
+  <p>시행일 : 2025.06.17</p>
+</div>
     </div>
   </div>
 )}
