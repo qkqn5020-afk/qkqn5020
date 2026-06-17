@@ -1123,8 +1123,8 @@ const App: React.FC = () => {
               <div className="lg:col-span-5 reveal-text">
                 <span className="text-orange-500 font-extrabold text-sm sm:text-base tracking-wider uppercase block mb-3">TRUST & PROVEN FACTS</span>
                 <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
-                  숫자로 공인받는 <br/>
-                  <span className="text-blue-400">베카24의 검증된 가치</span>
+                  JLSPORTS의 <br/>
+                  <span className="text-blue-400">검증된 가치</span>
                 </h3>
                 <p className="text-slate-400 font-medium text-base sm:text-lg tracking-tight mt-6 leading-relaxed">
                   본사의 탄탄한 경영 실적과 전국적인 기기 공용률 데이터를 있는 그대로 자부합니다. 수많은 실 오너 분들의 연중무휴 매출 데이터가 당사의 견고한 비즈니스 뼈대를 입증합니다.
@@ -1140,7 +1140,7 @@ const App: React.FC = () => {
                     전국 직영점 운영
                   </div>
                   <p className="text-slate-400 text-xs sm:text-sm font-semibold tracking-tight mt-4">
-                    실제 운영 매장을 기반으로 창업 상담 진행
+                    실제 운영 매장 기반으로 창업 상담
                   </p>
                 </div>
 
@@ -1162,7 +1162,7 @@ const App: React.FC = () => {
                     본사 직접 시공
                   </div>
                   <p className="text-slate-400 text-xs sm:text-sm font-semibold tracking-tight mt-4">
-                    상담부터 설치·시공까지 본사에서 직접 진행
+                    상담·설치·시공까지 본사 직접 진행
                   </p>
                 </div>
 
@@ -1173,7 +1173,7 @@ const App: React.FC = () => {
                     검증된 창업 모델
                   </div>
                   <p className="text-slate-400 text-xs sm:text-sm font-semibold tracking-tight mt-4">
-                    실제 매장 운영 경험을 바탕으로 구성된 시스템
+                    실제 매장 운영 경험으로 구성된 시스템
                   </p>
                 </div>
 
@@ -1197,7 +1197,7 @@ const App: React.FC = () => {
                 
                 <h3 className="text-2xl sm:text-3xl md:text-5xl font-black text-white tracking-tight leading-snug mb-4">
                   성공적인 무인 오토 창업 파트너, <br/>
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-orange-400">베카24와 부담 없이 시작하세요!</span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-orange-400">제이엘에스와 부담 없이 시작하세요!</span>
                 </h3>
                 <p className="text-slate-400 font-medium text-sm sm:text-base md:text-lg tracking-tight mb-10 max-w-2xl">
                   아래 간단한 문의를 접수해 주시면 원하는 희망 지역권의 상권 보고서와 초기 설계 수익 추정 시뮬레이션을 전액 무상 지원합니다.
