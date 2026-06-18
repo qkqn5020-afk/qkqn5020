@@ -1127,28 +1127,28 @@ const [showPrivacy, setShowPrivacy] = useState(false);
                     JLSPORTS BRAND UNIVERSE
                   </span>
                   <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
-                    제이엘에스가 만드는<br />
-                    <span className="text-blue-400">무인 스포츠 창업 브랜드</span>
+                    제이엘에스<br />
+                    <span className="text-blue-400">무인 스포츠 창업</span>
                   </h3>
                   <p className="text-slate-300 font-medium text-base sm:text-lg mt-6 leading-relaxed">
-                    주식회사 제이엘에스, 제이엘스포츠, JLSPORTS는 베카24, 홈런짱24, 24시 무인 짱탁구장을 운영합니다.
+                    제이엘에스는 베카24, 홈런짱24, 24시 무인 짱탁구장을 운영합니다.
                   </p>
                 </div>
 
                 <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-3 gap-5 reveal-text">
                   {[
                     {
-                      label: 'BECA24',
+                      label: '실내 야구연습장',
                       title: '베카24',
                       text: '실내야구연습장, 카페, 오락기기, 로봇탁구가 결합된 무인 복합시설'
                     },
                     {
-                      label: 'HOMERUNZZANG24',
+                      label: '실외 야구연습장',
                       title: '홈런짱24',
                       text: '야외에서 즐기는 24시 무인 야구연습장 브랜드'
                     },
                     {
-                      label: 'ZZANG TABLE TENNIS',
+                      label: '무인 탁구장',
                       title: '짱탁구장',
                       text: '로봇탁구 기반의 24시 무인탁구장 창업 브랜드'
                     }
