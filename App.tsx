@@ -1115,26 +1115,23 @@ const [showPrivacy, setShowPrivacy] = useState(false);
             </div>
           </div>
 
-                    {/* 3. JLSPORTS Brand Universe & SEO Keywords */}
+                            {/* 3. JLSPORTS Brand Universe - Compact Version */}
           <div className="my-36 bg-slate-950 rounded-[48px] p-8 sm:p-12 md:p-16 relative overflow-hidden shadow-2xl">
-            {/* Visual Lights */}
             <div className="absolute top-0 right-0 w-[520px] h-[520px] bg-blue-600/20 rounded-full blur-[150px] pointer-events-none"></div>
             <div className="absolute bottom-0 left-0 w-[420px] h-[420px] bg-orange-500/15 rounded-full blur-[130px] pointer-events-none"></div>
 
             <div className="relative z-10">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-12">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-12">
                 <div className="lg:col-span-5 reveal-text">
-                  <span className="text-orange-400 font-extrabold text-sm sm:text-base tracking-wider uppercase block mb-3">
+                  <span className="text-orange-400 font-extrabold text-sm tracking-wider uppercase block mb-4">
                     JLSPORTS BRAND UNIVERSE
                   </span>
                   <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
                     제이엘에스가 만드는<br />
-                    <span className="text-blue-400">24시 무인 스포츠 창업</span>
+                    <span className="text-blue-400">무인 스포츠 창업 브랜드</span>
                   </h3>
-                  <p className="text-slate-300 font-medium text-base sm:text-lg tracking-tight mt-6 leading-relaxed">
-                    주식회사 제이엘에스, 제이엘스포츠, JLSPORTS는 베카24, 홈런짱24, 24시 무인 짱탁구장을 운영하는
-                    무인창업·스포츠창업 전문 기업입니다. 무인야구연습장, 무인탁구장, 실내스포츠창업,
-                    스포츠 프랜차이즈 창업을 준비하는 예비 창업자에게 검증된 브랜드 모델을 제안합니다.
+                  <p className="text-slate-300 font-medium text-base sm:text-lg mt-6 leading-relaxed">
+                    주식회사 제이엘에스, 제이엘스포츠, JLSPORTS는 베카24, 홈런짱24, 24시 무인 짱탁구장을 운영합니다.
                   </p>
                 </div>
 
@@ -1143,17 +1140,17 @@ const [showPrivacy, setShowPrivacy] = useState(false);
                     {
                       label: 'BECA24',
                       title: '베카24',
-                      text: '실내야구연습장, 야구카페, 카페 공간, 로봇탁구, 다양한 오락기기가 결합된 24시 무인 복합 스포츠 시설입니다.'
+                      text: '실내야구연습장, 카페, 오락기기, 로봇탁구가 결합된 무인 복합시설'
                     },
                     {
                       label: 'HOMERUNZZANG24',
                       title: '홈런짱24',
-                      text: '실외야구연습장과 무인야구연습장 창업을 위한 야외형 24시 무인 야구연습장 브랜드입니다.'
+                      text: '야외에서 즐기는 24시 무인 야구연습장 브랜드'
                     },
                     {
                       label: 'ZZANG TABLE TENNIS',
                       title: '짱탁구장',
-                      text: '24시 무인 짱탁구장은 로봇탁구와 무인 운영 시스템을 결합한 무인탁구장 창업 브랜드입니다.'
+                      text: '로봇탁구 기반의 24시 무인탁구장 창업 브랜드'
                     }
                   ].map((brand, index) => (
                     <div
@@ -1174,52 +1171,45 @@ const [showPrivacy, setShowPrivacy] = useState(false);
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 reveal-text">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 reveal-text mb-10">
                 {[
-                  {
-                    label: 'STARTUP 01',
-                    title: '전국 창업 상담',
-                    text: '부산, 양산, 김해, 창원, 경남뿐 아니라 대한민국 전국 어디서든 상담 가능합니다.'
-                  },
-                  {
-                    label: 'STARTUP 02',
-                    title: '24시간 무인 운영',
-                    text: '무인매장 창업, 무인점포 창업, 자동화 창업에 맞춘 운영 시스템을 제안합니다.'
-                  },
-                  {
-                    label: 'STARTUP 03',
-                    title: '본사 직접 시공',
-                    text: '상담, 설치, 시공, 장비 구성까지 본사가 직접 함께 진행합니다.'
-                  },
-                  {
-                    label: 'STARTUP 04',
-                    title: '검증된 창업 모델',
-                    text: '실내 스포츠 창업, 실외 야구연습장 창업, 스포츠창업에 맞는 브랜드 모델입니다.'
-                  }
+                  '전국 창업 상담',
+                  '24시간 무인 운영',
+                  '본사 직접 시공',
+                  '검증된 창업 모델'
                 ].map((item, index) => (
                   <div
                     key={index}
-                    className="bg-slate-900/80 border border-white/10 p-5 sm:p-6 rounded-[28px] hover:border-blue-400/40 transition-all duration-300"
+                    className="bg-slate-900/80 border border-white/10 p-5 rounded-[24px] text-center"
                   >
-                    <span className="text-orange-400 text-xs sm:text-sm font-bold block mb-3">
-                      {item.label}
-                    </span>
-                    <div className="text-lg sm:text-xl lg:text-2xl font-black text-white tracking-tight leading-snug">
-                      {item.title}
-                    </div>
-                    <p className="text-slate-400 text-xs sm:text-sm font-semibold tracking-tight mt-4 leading-relaxed">
-                      {item.text}
+                    <p className="text-orange-400 text-xs font-black mb-3">
+                      TRUST 0{index + 1}
+                    </p>
+                    <p className="text-white text-lg md:text-xl font-black">
+                      {item}
                     </p>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-10 reveal-text bg-gradient-to-r from-blue-600 to-blue-900 rounded-[32px] p-7 md:p-9 border border-blue-300/20">
-                <p className="text-blue-100 text-base md:text-lg leading-relaxed font-medium">
-                  제이엘에스는 무인 야구연습장 창업, 실내 야구연습장 창업, 실외 야구연습장 창업,
-                  무인 탁구장 창업, 실내 스포츠 창업, 스포츠 프랜차이즈 창업을 고민하는 분들에게
-                  베카24·홈런짱24·24시 무인 짱탁구장 브랜드를 통해 현실적인 무인 스포츠 창업 방향을 안내합니다.
-                </p>
+              <div className="reveal-text flex flex-wrap gap-3">
+                {[
+                  '무인창업',
+                  '스포츠창업',
+                  '실내스포츠창업',
+                  '무인야구연습장',
+                  '실내야구연습장',
+                  '실외야구연습장',
+                  '무인탁구장',
+                  '스포츠 프랜차이즈'
+                ].map((keyword, index) => (
+                  <span
+                    key={index}
+                    className="bg-blue-500/15 border border-blue-300/20 text-blue-100 px-4 py-2 rounded-full text-sm font-bold"
+                  >
+                    #{keyword}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
