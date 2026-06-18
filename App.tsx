@@ -347,9 +347,9 @@ const [showPrivacy, setShowPrivacy] = useState(false);
               국내유일 야구카페!<br />
               치고! 던지고! 마시고! 즐기자!
             </p>
-            <h2 className="text-3xl sm:text-4xl md:text-9xl font-black tracking-tighter drop-shadow-2xl whitespace-nowrap">
-              베카24 & 홈런짱24
-            </h2>
+            <h1 className="text-3xl sm:text-4xl md:text-9xl font-black tracking-tighter drop-shadow-2xl whitespace-nowrap">
+              베카24·홈런짱24 24시 무인 야구연습장 창업
+            </h1>
           </div>
         </div>
 
