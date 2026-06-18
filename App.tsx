@@ -1229,6 +1229,76 @@ const [showPrivacy, setShowPrivacy] = useState(false);
         </div>
       </section>
 
+  <section id="faq" className="py-24 bg-slate-50">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="text-center mb-14 reveal-text">
+            <p className="text-primary font-black tracking-widest mb-4">FAQ</p>
+            <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mb-6">
+              무인 야구연습장 창업 자주 묻는 질문
+            </h2>
+            <p className="text-gray-500 text-lg leading-relaxed">
+              베카24·홈런짱24·24시 무인 짱탁구장 창업을 준비하시는 분들이 자주 묻는 내용을 정리했습니다.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              {
+                question: '무인 야구연습장 창업은 초보자도 가능한가요?',
+                answer: '네, 가능합니다. 베카24와 홈런짱24는 무인 운영 시스템, 장비 구성, 매장 운영 방식까지 본사에서 함께 안내하기 때문에 스포츠 창업이 처음인 분들도 상담을 통해 준비할 수 있습니다.'
+              },
+              {
+                question: '베카24와 홈런짱24는 어떤 브랜드인가요?',
+                answer: '베카24와 홈런짱24는 주식회사 제이엘에스가 운영하는 24시 무인 야구연습장 및 실내 스포츠 창업 브랜드입니다. 야구 배팅, 피칭머신, 데이터 분석, 무인 운영 시스템을 결합한 스포츠 공간입니다.'
+              },
+              {
+                question: '24시 무인 운영이 가능한가요?',
+                answer: '네, 출입, 결제, 장비 운영, 원격 관리 시스템을 활용해 24시간 무인 운영을 목표로 설계된 창업 모델입니다. 인건비 부담을 줄이고 안정적인 운영 구조를 만드는 데 초점을 둡니다.'
+              },
+              {
+                question: '무인 스포츠 창업 비용은 어떻게 확인하나요?',
+                answer: '창업 비용은 매장 평수, 레인 수, 장비 구성, 인테리어 범위, 지역 상권에 따라 달라질 수 있습니다. 그래서 베카24는 1:1 창업 상담을 통해 희망 지역과 규모에 맞는 비용을 안내합니다.'
+              },
+              {
+                question: '무인 탁구장 창업도 가능한가요?',
+                answer: '네, 24시 무인 짱탁구장 브랜드를 통해 무인 탁구장 창업 상담도 가능합니다. 야구연습장뿐 아니라 탁구장, 실내 스포츠 공간 등 다양한 무인 스포츠 창업을 함께 검토할 수 있습니다.'
+              },
+              {
+                question: '부산, 양산 지역에서도 창업 상담이 가능한가요?',
+                answer: '네, 부산, 양산을 포함한 여러 지역에서 창업 상담이 가능합니다. 희망 지역의 상권, 유동 인구, 매장 규모를 바탕으로 적합한 무인 스포츠 창업 방향을 상담할 수 있습니다.'
+              }
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="bg-white border border-slate-100 rounded-3xl shadow-sm overflow-hidden"
+              >
+                <button
+                  type="button"
+                  onClick={() => toggleFaq(index)}
+                  className="w-full flex items-center justify-between gap-6 text-left px-6 md:px-8 py-6"
+                >
+                  <span className="text-lg md:text-xl font-black text-slate-900">
+                    {item.question}
+                  </span>
+                  <span className="shrink-0 w-10 h-10 rounded-full bg-blue-50 text-primary flex items-center justify-center">
+                    {openFaqIndex === index ? (
+                      <Minus className="w-5 h-5" />
+                    ) : (
+                      <Plus className="w-5 h-5" />
+                    )}
+                  </span>
+                </button>
+
+                {openFaqIndex === index && (
+                  <div className="px-6 md:px-8 pb-7 text-gray-500 leading-relaxed text-base md:text-lg">
+                    {item.answer}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
       {/* FAQ & CONTACT */}
       <section id="contact" className="py-24 bg-white relative">
         <div className="max-w-4xl mx-auto px-4 relative reveal-text">
