@@ -1115,70 +1115,111 @@ const [showPrivacy, setShowPrivacy] = useState(false);
             </div>
           </div>
 
-          {/* 3. Trust & Proven Operation (Statistics) */}
-          <div className="my-36 bg-slate-900 rounded-[48px] p-8 sm:p-12 md:p-16 relative overflow-hidden shadow-2xl">
+                    {/* 3. JLSPORTS Brand Universe & SEO Keywords */}
+          <div className="my-36 bg-slate-950 rounded-[48px] p-8 sm:p-12 md:p-16 relative overflow-hidden shadow-2xl">
             {/* Visual Lights */}
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-orange-500/10 rounded-full blur-[100px] pointer-events-none"></div>
-            
-            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              <div className="lg:col-span-5 reveal-text">
-                <span className="text-orange-500 font-extrabold text-sm sm:text-base tracking-wider uppercase block mb-3">TRUST & PROVEN FACTS</span>
-                <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
-                  JLSPORTS의 <br/>
-                  <span className="text-blue-400">검증된 가치</span>
-                </h3>
-                <p className="text-slate-400 font-medium text-base sm:text-lg tracking-tight mt-6 leading-relaxed">
-                  본사의 탄탄한 경영 실적과 전국적인 기기 공용률 데이터를 있는 그대로 자부합니다. 수많은 실 오너 분들의 연중무휴 매출 데이터가 당사의 견고한 비즈니스 뼈대를 입증합니다.
-                </p>
+            <div className="absolute top-0 right-0 w-[520px] h-[520px] bg-blue-600/20 rounded-full blur-[150px] pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-[420px] h-[420px] bg-orange-500/15 rounded-full blur-[130px] pointer-events-none"></div>
+
+            <div className="relative z-10">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-12">
+                <div className="lg:col-span-5 reveal-text">
+                  <span className="text-orange-400 font-extrabold text-sm sm:text-base tracking-wider uppercase block mb-3">
+                    JLSPORTS BRAND UNIVERSE
+                  </span>
+                  <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
+                    제이엘에스가 만드는<br />
+                    <span className="text-blue-400">24시 무인 스포츠 창업</span>
+                  </h3>
+                  <p className="text-slate-300 font-medium text-base sm:text-lg tracking-tight mt-6 leading-relaxed">
+                    주식회사 제이엘에스, 제이엘스포츠, JLSPORTS는 베카24, 홈런짱24, 24시 무인 짱탁구장을 운영하는
+                    무인창업·스포츠창업 전문 기업입니다. 무인야구연습장, 무인탁구장, 실내스포츠창업,
+                    스포츠 프랜차이즈 창업을 준비하는 예비 창업자에게 검증된 브랜드 모델을 제안합니다.
+                  </p>
+                </div>
+
+                <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-3 gap-5 reveal-text">
+                  {[
+                    {
+                      label: 'BECA24',
+                      title: '베카24',
+                      text: '실내야구연습장, 야구카페, 카페 공간, 로봇탁구, 다양한 오락기기가 결합된 24시 무인 복합 스포츠 시설입니다.'
+                    },
+                    {
+                      label: 'HOMERUNZZANG24',
+                      title: '홈런짱24',
+                      text: '실외야구연습장과 무인야구연습장 창업을 위한 야외형 24시 무인 야구연습장 브랜드입니다.'
+                    },
+                    {
+                      label: 'ZZANG TABLE TENNIS',
+                      title: '짱탁구장',
+                      text: '24시 무인 짱탁구장은 로봇탁구와 무인 운영 시스템을 결합한 무인탁구장 창업 브랜드입니다.'
+                    }
+                  ].map((brand, index) => (
+                    <div
+                      key={index}
+                      className="bg-white/5 border border-white/10 rounded-[32px] p-6 backdrop-blur-md hover:bg-white/10 hover:-translate-y-2 transition-all duration-300"
+                    >
+                      <span className="text-blue-300 text-xs font-black tracking-[0.25em] block mb-4">
+                        {brand.label}
+                      </span>
+                      <h4 className="text-2xl font-black text-white mb-4">
+                        {brand.title}
+                      </h4>
+                      <p className="text-slate-400 text-sm leading-relaxed font-medium">
+                        {brand.text}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
-              
-              <div className="lg:col-span-7 grid grid-cols-2 gap-6 md:gap-8 reveal-text">
-                
-                {/* Stat block 1 */}
-                <div id="trust-card-1" className="bg-white/5 border border-white/10 p-6 sm:p-8 rounded-[32px] backdrop-blur-md hover:border-blue-500/30 hover:bg-white/10 transition-all duration-300">
-                  <span className="text-blue-400 text-xs sm:text-sm font-bold block mb-3">TRUST 01</span>
-                  <div className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-snug min-h-[3rem] sm:min-h-[4rem] flex items-center">
-                    전국 직영점 운영
-                  </div>
-                  <p className="text-slate-400 text-xs sm:text-sm font-semibold tracking-tight mt-4">
-                    실제 운영 매장 기반으로 창업 상담
-                  </p>
-                </div>
 
-                {/* Stat block 2 */}
-                <div id="trust-card-2" className="bg-white/5 border border-white/10 p-6 sm:p-8 rounded-[32px] backdrop-blur-md hover:border-orange-500/30 hover:bg-white/10 transition-all duration-300">
-                  <span className="text-orange-400 text-xs sm:text-sm font-bold block mb-3">TRUST 02</span>
-                  <div className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-snug min-h-[3rem] sm:min-h-[4rem] flex items-center">
-                    24시간 무인 운영
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 reveal-text">
+                {[
+                  {
+                    label: 'STARTUP 01',
+                    title: '전국 창업 상담',
+                    text: '부산, 양산, 김해, 창원, 경남뿐 아니라 대한민국 전국 어디서든 상담 가능합니다.'
+                  },
+                  {
+                    label: 'STARTUP 02',
+                    title: '24시간 무인 운영',
+                    text: '무인매장 창업, 무인점포 창업, 자동화 창업에 맞춘 운영 시스템을 제안합니다.'
+                  },
+                  {
+                    label: 'STARTUP 03',
+                    title: '본사 직접 시공',
+                    text: '상담, 설치, 시공, 장비 구성까지 본사가 직접 함께 진행합니다.'
+                  },
+                  {
+                    label: 'STARTUP 04',
+                    title: '검증된 창업 모델',
+                    text: '실내 스포츠 창업, 실외 야구연습장 창업, 스포츠창업에 맞는 브랜드 모델입니다.'
+                  }
+                ].map((item, index) => (
+                  <div
+                    key={index}
+                    className="bg-slate-900/80 border border-white/10 p-5 sm:p-6 rounded-[28px] hover:border-blue-400/40 transition-all duration-300"
+                  >
+                    <span className="text-orange-400 text-xs sm:text-sm font-bold block mb-3">
+                      {item.label}
+                    </span>
+                    <div className="text-lg sm:text-xl lg:text-2xl font-black text-white tracking-tight leading-snug">
+                      {item.title}
+                    </div>
+                    <p className="text-slate-400 text-xs sm:text-sm font-semibold tracking-tight mt-4 leading-relaxed">
+                      {item.text}
+                    </p>
                   </div>
-                  <p className="text-slate-400 text-xs sm:text-sm font-semibold tracking-tight mt-4">
-                    연중무휴 무인 시스템 운영 가능
-                  </p>
-                </div>
+                ))}
+              </div>
 
-                {/* Stat block 3 */}
-                <div id="trust-card-3" className="bg-white/5 border border-white/10 p-6 sm:p-8 rounded-[32px] backdrop-blur-md hover:border-purple-500/30 hover:bg-white/10 transition-all duration-300">
-                  <span className="text-purple-400 text-xs sm:text-sm font-bold block mb-3">TRUST 03</span>
-                  <div className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-snug min-h-[3rem] sm:min-h-[4rem] flex items-center">
-                    본사 직접 시공
-                  </div>
-                  <p className="text-slate-400 text-xs sm:text-sm font-semibold tracking-tight mt-4">
-                    상담·설치·시공까지 본사 직접 진행
-                  </p>
-                </div>
-
-                {/* Stat block 4 */}
-                <div id="trust-card-4" className="bg-white/5 border border-white/10 p-6 sm:p-8 rounded-[32px] backdrop-blur-md hover:border-emerald-500/30 hover:bg-white/10 transition-all duration-300">
-                  <span className="text-emerald-400 text-xs sm:text-sm font-bold block mb-3">TRUST 04</span>
-                  <div className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-snug min-h-[3rem] sm:min-h-[4rem] flex items-center">
-                    검증된 창업 모델
-                  </div>
-                  <p className="text-slate-400 text-xs sm:text-sm font-semibold tracking-tight mt-4">
-                    실제 매장 운영 경험으로 구성된 시스템
-                  </p>
-                </div>
-
+              <div className="mt-10 reveal-text bg-gradient-to-r from-blue-600 to-blue-900 rounded-[32px] p-7 md:p-9 border border-blue-300/20">
+                <p className="text-blue-100 text-base md:text-lg leading-relaxed font-medium">
+                  제이엘에스는 무인 야구연습장 창업, 실내 야구연습장 창업, 실외 야구연습장 창업,
+                  무인 탁구장 창업, 실내 스포츠 창업, 스포츠 프랜차이즈 창업을 고민하는 분들에게
+                  베카24·홈런짱24·24시 무인 짱탁구장 브랜드를 통해 현실적인 무인 스포츠 창업 방향을 안내합니다.
+                </p>
               </div>
             </div>
           </div>
