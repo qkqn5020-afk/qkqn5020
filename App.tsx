@@ -314,7 +314,16 @@ const [showPrivacy, setShowPrivacy] = useState(false);
             />
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 md:gap-4 mr-4 md:mr-10 lg:mr-16">
+            <a
+              href="https://www.jlsports.co.kr/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-orange-500 text-white px-6 py-2 rounded-full font-bold text-sm shadow-lg shadow-orange-200 hover:bg-orange-600 transition-all"
+            >
+              짱탁구장 바로가기
+            </a>
+
             <button 
               onClick={handleScrollToForm}
               className="bg-primary text-white px-6 py-2 rounded-full font-bold text-sm shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all"
