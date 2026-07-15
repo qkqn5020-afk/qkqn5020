@@ -124,22 +124,41 @@ const [showPrivacy, setShowPrivacy] = useState(false);
   const [isHighlighted, setIsHighlighted] = useState(false);
   const [pendingScrollAndFocus, setPendingScrollAndFocus] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
+const trackNaverConversion = () => {
+  if (typeof window === 'undefined') return;
 
-  const handleScrollToForm = () => {
-    setIsHighlighted(true);
-    const targetElement = document.getElementById('contact');
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  const naverWindow = window as any;
+
+  if (!naverWindow.wcs || !naverWindow.wcs.cnv || !naverWindow.wcs_do) return;
+
+  naverWindow._nasa = naverWindow._nasa || {};
+  naverWindow._nasa["cnv"] = naverWindow.wcs.cnv("4", "1");
+  naverWindow.wcs_do(naverWindow._nasa);
+};
+
+const handleScrollToForm = () => {
+  setIsHighlighted(true);
+
+  const targetElement = document.getElementById('contact');
+  if (targetElement) {
+    targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  setTimeout(() => {
+    if (nameInputRef.current) {
+      nameInputRef.current.focus({ preventScroll: true });
     }
-    setTimeout(() => {
-      if (nameInputRef.current) {
-        nameInputRef.current.focus({ preventScroll: true });
-      }
-    }, 850);
-    setTimeout(() => {
-      setIsHighlighted(false);
-    }, 2500);
-  };
+  }, 850);
+
+  setTimeout(() => {
+    setIsHighlighted(false);
+  }, 2500);
+};
+
+const handleConsultClick = () => {
+  trackNaverConversion();
+  handleScrollToForm();
+};
 
   const [formData, setFormData] = useState({
     name: '',
@@ -200,6 +219,7 @@ const [showPrivacy, setShowPrivacy] = useState(false);
       });
 
       if (response.ok) {
+        trackNaverConversion();
         setSubmitMessage({ 
           type: 'success', 
           text: '상담 신청이 접수되었습니다. 담당자가 확인 후 연락드리겠습니다.' 
@@ -325,7 +345,7 @@ const [showPrivacy, setShowPrivacy] = useState(false);
             </a>
 
             <button 
-              onClick={handleScrollToForm}
+              onClick={handleConsultClick}
               className="bg-primary text-white px-6 py-2 rounded-full font-bold text-sm shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all"
             >
               1:1 창업 상담
@@ -1249,13 +1269,17 @@ const [showPrivacy, setShowPrivacy] = useState(false);
                 <div className="flex flex-col sm:flex-row items-center gap-6 justify-center w-full">
                   <div className="bg-white/5 border border-white/10 rounded-[24px] px-8 py-4 flex flex-col items-center sm:items-start group transition-all duration-300 hover:border-blue-500/55 w-full sm:w-auto">
                     <span className="text-slate-400 text-xs font-bold block tracking-wider uppercase mb-1">본사 다이렉트 긴급 개설 라인</span>
-                    <a href="tel:1544-4788" className="text-3xl sm:text-4xl font-black text-blue-400 tracking-tighter hover:text-blue-300 transition-colors">
+                    <a
+  href="tel:1544-4788"
+  onClick={trackNaverConversion}
+  className="text-3xl sm:text-4xl font-black text-blue-400 tracking-tighter hover:text-blue-300 transition-colors"
+>
                       1544-4788
                     </a>
                   </div>
                   
                   <button 
-                    onClick={handleScrollToForm}
+                    onClick={handleConsultClick}
                     className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-black px-12 py-5 sm:py-6 rounded-[24px] text-lg sm:text-xl shadow-xl shadow-blue-900/30 transition-all duration-300 hover:shadow-blue-500/20 active:scale-[0.98] flex items-center justify-center gap-3 group"
                   >
                     <span>무료 창업 상담 신청</span>
