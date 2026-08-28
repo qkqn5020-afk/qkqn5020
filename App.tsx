@@ -563,9 +563,9 @@ const handleConsultClick = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
             {[
-              { title: '35평형', rev: '(3레인 기준)', img: 'https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/35%ED%8F%89.png' },
-              { title: '45평형', rev: '(4레인 기준)', img: "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/45%ED%8F%89%ED%98%95.png" },
-              { title: '60평형', rev: '(5레인 기준)', img: 'https://github.com/qkqn5020-afk/qkqn5020/raw/main/60%ED%8F%89.png' },
+              { title: '35평형', rev: '(3타석 기준)', img: 'https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/35%ED%8F%89.png' },
+              { title: '45평형', rev: '(4타석 기준)', img: "https://raw.githubusercontent.com/qkqn5020-afk/qkqn5020/main/45%ED%8F%89%ED%98%95.png" },
+              { title: '60평형', rev: '(5타석 기준)', img: 'https://github.com/qkqn5020-afk/qkqn5020/raw/main/60%ED%8F%89.png' },
             ].map((item, i) => (
               <div key={i} className="reveal-text bg-white rounded-[40px] overflow-hidden shadow-sm group hover:shadow-xl transition-all border border-gray-100" style={{ transitionDelay: `${i * 0.1}s` }}>
                 <div className="overflow-hidden h-56">
